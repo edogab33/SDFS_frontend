@@ -22,3 +22,16 @@ body {
 .ctrl-undo button {
   width: 60px !important;
 }
+.ctrl-get-grid {
+  right: 60px !important;
+}
+.ctrl-get-grid button {
+  width: 110px !important;
+  height: 30px !important;
+}
+.ctrl-get-grid-disabled button {
+  cursor: not-allowed;
+  pointer-events: none;
+  color: #c0c0c0;
+  background-color: #ffffff;
+}

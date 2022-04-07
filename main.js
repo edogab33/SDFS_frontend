@@ -15,6 +15,8 @@ import TileLayer from 'ol/layer/Tile';
 import {Vector as VectorLayer} from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
 import {Control, defaults as defaultControls} from 'ol/control';
+import Feature from 'ol/Feature';
+import Point from 'ol/geom/Point';
 
 const key =
   'pk.eyJ1IjoiZWRvZ2FiIiwiYSI6ImNsMWwxaXA0ajA1bjczY282MG9lZ3o3Z28ifQ.pm-O1XDStv6IxgpCx-rKZA';
@@ -87,6 +89,47 @@ class UndoControl extends Control {
   }
 }
 
+class GetGridControl extends Control {
+  /**
+   * @param {Object} [opt_options] Control options.
+   */
+  x0 = 0
+  y0 = 0
+  xn = 0
+  yn = 0
+  disabled = true
+  constructor(opt_options) {
+    const options = opt_options || {};
+
+    const button = document.createElement('button');
+    button.innerHTML = 'Ottieni griglia';
+
+    const element = document.createElement('div');
+    element.className = 'ol-control ctrl-get-grid ctrl-get-grid-disabled';
+    element.appendChild(button);
+    super({
+      element: element,
+      target: options.target,
+    });
+    this.element = element
+    button.addEventListener('click', this.handleGetGrid.bind(this), false);
+  }
+
+  handleGetGrid() {
+    // send x0,y0,xn,yn to the API Service and wait for the response
+  }
+
+  enableControl() {
+    this.disabled = false
+    this.element.className = 'ol-control ctrl-get-grid';
+  }
+
+  disableControl() {
+    this.disabled = true
+    this.element.className = 'ol-control ctrl-get-grid ctrl-get-grid-disabled';
+  }
+}
+
 // Calculation of resolutions that match zoom levels 1, 3, 5, 7, 9, 11, 13, 15.
 const resolutions = [];
 for (let i = 0; i <= 8; ++i) {
@@ -131,9 +174,10 @@ const extent = applyTransform(worldExtent, fromLonLat, undefined, 8);
 newProj.setExtent(extent);
 
 let undo = new UndoControl()
+let getGrid = new GetGridControl()
 
 const map = new Map({
-  controls: defaultControls().extend([undo]),
+  controls: defaultControls().extend([undo, getGrid]),
   layers: [
     new TileLayer({
       source:new OSM()
@@ -159,32 +203,75 @@ map.on('moveend', function(e) {
   }
 });
 
-map.on('singleclick', function (evt) {
-    console.log("coordinates: "+evt.coordinate);
-});
-
 const displayFeatureInfo = function (pixel) {
   let features = map.getFeaturesAtPixel(pixel)
   // Never-clicked cells have no style
-  if (features[0].getStyle() == null) {
-    undo.stack.push(features[0])
-  } else if (features[0].getStyle() != null) {
-    if (features[0].getStyle().fill_.color_ == 'rgba(0, 0, 0, 0.1)') {
-      // Cell has been clicked, removed from the stack and clicked again
+  if (features[0] != undefined) {
+    if (features[0].getStyle() == null) {
       undo.stack.push(features[0])
+    } else if (features[0].getStyle() != null) {
+      if (features[0].getStyle().fill_.color_ == 'rgba(0, 0, 0, 0.1)') {
+        // Cell has been clicked, removed from the stack and clicked again
+        undo.stack.push(features[0])
+      }
     }
+    features[0].setStyle(new Style({
+      stroke: new Stroke({
+        color: 'blue',
+        width: 1,
+      }),
+      fill: new Fill({
+        color: 'rgba(255, 0, 0, 0.3)',
+      })
+    }))
   }
-  features[0].setStyle(new Style({
-    stroke: new Stroke({
-      color: 'blue',
-      width: 1,
-    }),
-    fill: new Fill({
-      color: 'rgba(255, 0, 0, 0.3)',
-    })
-  }))
 };
 
 map.on('click', function (evt) {
   displayFeatureInfo(evt.pixel);
+});
+
+const iconStyle = new Style({
+  image: new Icon({
+    //anchor: [0.5, 46],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'pixels',
+    src: '/assets/icon.png',
+  }),
+});
+const pointSource = new VectorSource({
+  features: [],
+});
+const pointLayer = new VectorLayer();
+map.addLayer(pointLayer)
+let tapCount = 0
+
+map.on('singleclick', function (evt) {
+  console.log("coordinates: "+evt.coordinate);
+  if (tapCount < 2) {
+    const iconFeature = new Feature({
+      geometry: new Point(evt.coordinate),
+      name: 'Point'
+    });
+
+    iconFeature.setStyle(iconStyle);
+    pointSource.addFeature(iconFeature)
+    pointLayer.setSource(pointSource)
+
+    tapCount += 1
+    if (tapCount == 1) {
+      getGrid.x0 = evt.coordinate[0]
+      getGrid.y0 = evt.coordinate[1]
+    } else if (tapCount == 2) {
+      getGrid.xn = evt.coordinate[0]
+      getGrid.yn = evt.coordinate[1]
+      getGrid.enableControl()
+    }
+    console.log(getGrid)
+  } else if (tapCount >= 2) {
+    tapCount = 0
+    pointSource.clear()   // delete markers
+    getGrid.disableControl()
+  }
+  console.log(getGrid.getProperties())
 });
