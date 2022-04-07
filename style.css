@@ -1,12 +1,24 @@
 @import "node_modules/ol/ol.css";
 
-html, body {
+body {
   margin: 0;
-  height: 100%;
 }
 .map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
   width: 100vw;
+  height: 100vh;
+  background: #f8f4f0;
+}
+.ol-control {
+    right: 8px !important;
+    top: auto !important;
+}
+.ol-zoom {
+    right: 8px !important;
+    left: auto !important;
+}
+.ctrl-undo {
+  top: 60px !important;
+}
+.ctrl-undo button {
+  width: 60px !important;
 }
