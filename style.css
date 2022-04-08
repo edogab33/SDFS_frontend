@@ -18,18 +18,32 @@ body {
 }
 .ctrl-undo {
   top: 60px !important;
+  right: 60px !important;
 }
 .ctrl-undo button {
   width: 60px !important;
 }
 .ctrl-get-grid {
-  right: 60px !important;
+  right: 240px !important;
 }
 .ctrl-get-grid button {
   width: 110px !important;
   height: 30px !important;
 }
 .ctrl-get-grid-disabled button {
+  cursor: not-allowed;
+  pointer-events: none;
+  color: #c0c0c0;
+  background-color: #ffffff;
+}
+.ctrl-start-sim {
+  right: 60px !important;
+}
+.ctrl-start-sim button {
+  width: 150px !important;
+  height: 30px !important;
+}
+.ctrl-start-sim-disabled button {
   cursor: not-allowed;
   pointer-events: none;
   color: #c0c0c0;

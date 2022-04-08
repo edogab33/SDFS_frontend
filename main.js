@@ -131,6 +131,44 @@ class GetGridControl extends Control {
   }
 }
 
+class StartSimulation extends Control {
+    /**
+   * @param {Object} [opt_options] Control options.
+   */
+  initState
+  disabled = true
+  constructor(opt_options) {
+    const options = opt_options || {};
+
+    const button = document.createElement('button');
+    button.innerHTML = 'Inizia simulazione';
+
+    const element = document.createElement('div');
+    element.className = 'ol-control ctrl-start-sim ctrl-start-sim-disabled';
+    element.appendChild(button);
+    super({
+      element: element,
+      target: options.target,
+    });
+    this.element = element
+    button.addEventListener('click', this.handleStartSimulation.bind(this), false);
+  }
+
+  handleStartSimulation() {
+    // send the initial state to the API Service
+  }
+
+  enableControl() {
+    this.disabled = false
+    this.element.className = 'ol-control ctrl-start-sim';
+  }
+
+  disableControl() {
+    this.disabled = true
+    this.element.className = 'ol-control ctrl-start-sim ctrl-start-sim-disabled';
+  }
+}
+
 // Calculation of resolutions that match zoom levels 1, 3, 5, 7, 9, 11, 13, 15.
 const resolutions = [];
 for (let i = 0; i <= 8; ++i) {
@@ -176,9 +214,10 @@ newProj.setExtent(extent);
 
 let undo = new UndoControl()
 let getGrid = new GetGridControl()
+let startSim = new StartSimulation()
 
 const map = new Map({
-  controls: defaultControls().extend([undo, getGrid]),
+  controls: defaultControls().extend([undo, getGrid, startSim]),
   layers: [
     new TileLayer({
       source:new OSM()
@@ -256,6 +295,9 @@ const displayFeatureInfo = function (pixel) {
         // Cell has been clicked, removed from the stack and clicked again
         undo.stack.push(features[0])
       }
+    }
+    if (startSim.disabled == true) {
+      startSim.enableControl()
     }
     features[0].setStyle(new Style({
       stroke: new Stroke({
