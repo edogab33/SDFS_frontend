@@ -6,7 +6,7 @@ import VectorTileLayer from 'ol/layer/VectorTile';
 import VectorTileSource from 'ol/source/VectorTile';
 import View from 'ol/View';
 import proj4 from 'proj4';
-import {Fill, Icon, Stroke, Style, Text} from 'ol/style';
+import {Fill, Icon, Stroke, Style, Text, Circle as CircleStyle} from 'ol/style';
 import {get as getProjection, getTransform} from 'ol/proj';
 import {register} from 'ol/proj/proj4';
 import {applyTransform} from 'ol/extent';
@@ -17,6 +17,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import {Control, defaults as defaultControls} from 'ol/control';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
+import Geolocation from 'ol/Geolocation';
 
 const key =
   'pk.eyJ1IjoiZWRvZ2FiIiwiYSI6ImNsMWwxaXA0ajA1bjczY282MG9lZ3o3Z28ifQ.pm-O1XDStv6IxgpCx-rKZA';
@@ -193,6 +194,47 @@ const map = new Map({
   }),
 });
 
+/* GEOLOCATION */
+const geolocation = new Geolocation({
+  trackingOptions: {
+    enableHighAccuracy: true,
+  },
+  projection: newProj,
+});
+
+function el(id) {
+  return document.getElementById(id);
+}
+
+geolocation.setTracking(true);
+
+const accuracyFeature = new Feature();
+geolocation.on('change:accuracyGeometry', function () {
+  accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+});
+
+const positionFeature = new Feature();
+positionFeature.setStyle(
+  new Style({
+    image: new CircleStyle({
+      radius: 6,
+      fill: new Fill({
+        color: '#3399CC',
+      }),
+      stroke: new Stroke({
+        color: '#fff',
+        width: 2,
+      }),
+    }),
+  })
+);
+
+geolocation.on('change:position', function () {
+  const coordinates = geolocation.getPosition();
+  positionFeature.setGeometry(coordinates ? new Point(coordinates) : null);
+});
+
+/* EVENTS */
 var currZoom = map.getView().getZoom();
 console.log(currZoom)
 map.on('moveend', function(e) {
