@@ -5,8 +5,14 @@ body {
 }
 .map {
   width: 100vw;
-  height: 100vh;
+  height: 95vh;
+  margin-top: auto;
   background: #f8f4f0;
+}
+.toolbar {
+  background-color: #16315c;
+  width: auto;
+  height: 5vh;
 }
 .ol-control {
     right: 8px !important;
@@ -24,17 +30,27 @@ body {
   width: 60px !important;
 }
 .ctrl-get-grid {
-  right: 240px !important;
+  top: 50%;
+  display: flex;
+  justify-content: flex-end;
+  transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  padding-top: 45px;
 }
 .ctrl-get-grid button {
   width: 110px !important;
   height: 30px !important;
+  right: 10px;
+  background-color: #596a85;
 }
 .ctrl-get-grid-disabled button {
   cursor: not-allowed;
   pointer-events: none;
   color: #c0c0c0;
-  background-color: #ffffff;
+  background-color: #6d727a;
 }
 .ctrl-start-sim {
   right: 60px !important;

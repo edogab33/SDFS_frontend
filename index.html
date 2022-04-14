@@ -9,11 +9,16 @@
     <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=fetch,requestAnimationFrame,Element.prototype.classList,TextDecoder"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.18.3/minified.js"></script>
     <script src="https://openlayers.org/en/v6.14.1/examples/resources/mapbox-streets-v6-style.js"></script>
-    <script type="text/javascript" src="grid.geojson"></script>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    <div class="toolbar">
+      <div id="getgrid" class="ctrl-get-grid ctrl-get-grid-disabled" style="pointer-events: auto;">
+        <button>Ottieni griglia</button>
+      </div>
+    </div>
     <div id="map" class="map"></div>
-    <script type="module" src="main.js"></script>
+    <script type="module" src="./main.js"></script>
+    <script type="module" src="./api.js"></script>
   </body>
 </html>
