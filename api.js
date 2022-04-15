@@ -6,6 +6,7 @@ export function getGrid(x0,y0,xn,yn) {
     return axios.get(BASE_URL+'/grid/'+x0+'/'+y0+'/'+xn+'/'+yn)
 }
 
-export function startSimulation() {
-
+export function startSimulation(initialState) {
+    console.log(initialState)
+    return axios.post(BASE_URL+'/start', initialState)
 }

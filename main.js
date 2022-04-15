@@ -9,7 +9,7 @@ import proj4 from 'proj4';
 import {Fill, Icon, Stroke, Style, Text, Circle as CircleStyle} from 'ol/style';
 import {get as getProjection, getTransform} from 'ol/proj';
 import {register} from 'ol/proj/proj4';
-import {applyTransform} from 'ol/extent';
+import {applyTransform, approximatelyEquals} from 'ol/extent';
 import {OSM, Vector as VectorSource} from 'ol/source'
 import TileLayer from 'ol/layer/Tile';
 import {Vector as VectorLayer} from 'ol/layer';
@@ -18,12 +18,11 @@ import {Control, defaults as defaultControls} from 'ol/control';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Geolocation from 'ol/Geolocation';
-import {getGrid} from './api'
+import {getGrid, startSimulation} from './api'
+import { format } from 'ol/coordinate';
 
 const key =
   'pk.eyJ1IjoiZWRvZ2FiIiwiYSI6ImNsMWwxaXA0ajA1bjczY282MG9lZ3o3Z28ifQ.pm-O1XDStv6IxgpCx-rKZA';
-
-
 
 const styles = {
   'Polygon': new Style({
@@ -37,11 +36,14 @@ const styles = {
   }),
 };
 
+var vectLayer
+
 class UndoControl extends Control {
   /**
    * @param {Object} [opt_options] Control options.
    */
   stack = []
+  vectLayer;
   constructor(opt_options) {
     const options = opt_options || {};
 
@@ -103,6 +105,14 @@ class StartSimulation extends Control {
 
   handleStartSimulation() {
     // send the initial state to the API Service
+    var gjson = new GeoJSON().writeFeatures(vectLayer.getSource().getFeatures())
+    
+    startSimulation(gjson).then(response => {
+      console.log(response)
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   enableControl() {
@@ -231,8 +241,9 @@ map.on('moveend', function(e) {
 
 const clickCell = function (pixel) {
   let features = map.getFeaturesAtPixel(pixel)
-  // Never-clicked cells have no style
+
   if (features[0] != undefined) {
+    // Never-clicked cells have no style
     if (features[0].getStyle() == null) {
       undo.stack.push(features[0])
     } else if (features[0].getStyle() != null) {
@@ -253,6 +264,11 @@ const clickCell = function (pixel) {
         color: 'rgba(255, 0, 0, 0.3)',
       })
     }))
+    features[0].setProperties({"fire": 1})
+  }
+  if (vectLayer != undefined) {
+    console.log(vectLayer.getSource())
+    startSim.vectLayer = vectLayer
   }
 };
 
@@ -347,6 +363,7 @@ function clickGetGrid() {
         style: styleFunction
       });
       map.addLayer(vectorLayer)
+      vectLayer = vectorLayer
     })
 }
 
