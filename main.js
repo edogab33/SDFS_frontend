@@ -13,174 +13,13 @@ import {applyTransform, approximatelyEquals} from 'ol/extent';
 import {OSM, Vector as VectorSource} from 'ol/source'
 import TileLayer from 'ol/layer/Tile';
 import {Vector as VectorLayer} from 'ol/layer';
-import GeoJSON from 'ol/format/GeoJSON';
-import {Control, defaults as defaultControls} from 'ol/control';
+import {defaults as defaultControls} from 'ol/control';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Geolocation from 'ol/Geolocation';
-import {getGrid, getSnapshot, startSimulation} from './api'
-import { format } from 'ol/coordinate';
-
-const key =
-  'pk.eyJ1IjoiZWRvZ2FiIiwiYSI6ImNsMWwxaXA0ajA1bjczY282MG9lZ3o3Z28ifQ.pm-O1XDStv6IxgpCx-rKZA';
-
-const styles = {
-  'Polygon': new Style({
-    stroke: new Stroke({
-      color: 'blue',
-      width: 1,
-    }),
-    fill: new Fill({
-      color: 'rgba(0, 0, 0, 0.1)',
-    }),
-  }),
-};
-
-var vectLayer
-
-class UndoControl extends Control {
-  /**
-   * @param {Object} [opt_options] Control options.
-   */
-  stack = []
-  vectLayer;
-  constructor(opt_options) {
-    const options = opt_options || {};
-
-    const button = document.createElement('button');
-    button.innerHTML = 'Pulisci';
-
-    const element = document.createElement('div');
-    element.className = 'ol-control ctrl-undo';
-    element.appendChild(button);
-
-    super({
-      element: element,
-      target: options.target,
-    });
-
-    button.addEventListener('click', this.handleUndo.bind(this), false);
-  }
-
-  handleUndo() {
-    if (this.stack.length > 0) {
-      console.log(this.stack)
-      let feature = this.stack.pop()
-      console.log(this.stack)
-      feature.setStyle(new Style({
-        stroke: new Stroke({
-          color: 'blue',
-          width: 1,
-        }),
-        fill: new Fill({
-          color: 'rgba(0, 0, 0, 0.1)',
-        })
-      }))
-    }
-  }
-}
-
-class StartSimulation extends Control {
-    /**
-   * @param {Object} [opt_options] Control options.
-   */
-  initState
-  disabled = true
-  simulationId
-  timer
-  map
-  constructor(opt_options) {
-    const options = opt_options || {};
-
-    const button = document.createElement('button');
-    button.innerHTML = 'Inizia simulazione';
-
-    const element = document.createElement('div');
-    element.className = 'ol-control ctrl-start-sim ctrl-start-sim-disabled';
-    element.appendChild(button);
-    super({
-      element: element,
-      target: options.target,
-    });
-    this.element = element
-    button.addEventListener('click', this.handleStartSimulation.bind(this), false);
-  }
-
-  handleStartSimulation() {
-    // send the initial state to the API Service
-    var gjson = JSON.parse(new GeoJSON().writeFeatures(vectLayer.getSource().getFeatures()))
-    startSimulation(gjson).then(response => {
-      console.log(response)
-      this.simulationId = response.data
-      setTimeout(5000)
-      this.refresh()
-    })
-    .catch(error => {
-      console.log(error)
-    })
-  }
-
-  refresh() {
-    console.log(this.i)
-    console.log(this.simulationId)
-    getSnapshot(this.simulationId).then(response => {
-      console.log(response)
-      var grid = response.data
-        const vectorSource = new VectorSource({
-          features: new GeoJSON().readFeatures(grid),
-        });
-        const vectorLayer = new VectorLayer({
-          source: vectorSource,
-          style: styleFunction
-        });
-        console.log(this.map.getLayers())
-        this.map.getLayers().getArray()
-          .filter(layer => layer.get('name') === 'Marker')
-          .forEach(layer => map.removeLayer(layer));
-        this.map.addLayer(vectorLayer)
-        vectLayer = vectorLayer
-    })
-    this.timer = setTimeout(this.refresh, 5000);
-  }
-
-  stop() {
-    if (this.timer) {
-      clearTimeout(this.timer)
-      this.timer = 0
-    }
-  }
-
-  enableControl() {
-    this.disabled = false
-    this.element.className = 'ol-control ctrl-start-sim';
-  }
-
-  disableControl() {
-    this.disabled = true
-    this.element.className = 'ol-control ctrl-start-sim ctrl-start-sim-disabled';
-  }
-}
-
-// Calculation of resolutions that match zoom levels 1, 3, 5, 7, 9, 11, 13, 15.
-const resolutions = [];
-for (let i = 0; i <= 8; ++i) {
-  resolutions.push(156543.03392804097 / Math.pow(2, i * 2));
-}
-// Calculation of tile urls for zoom levels 1, 3, 5, 7, 9, 11, 13, 15.
-function tileUrlFunction(tileCoord) {
-  return (
-    'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/' +
-    '{z}/{x}/{y}.vector.pbf?access_token=' +
-    key
-  )
-    .replace('{z}', String(tileCoord[0] * 2 - 1))
-    .replace('{x}', String(tileCoord[1]))
-    .replace('{y}', String(tileCoord[2]))
-    .replace(
-      '{a-d}',
-      'abcd'.substr(((tileCoord[1] << tileCoord[0]) + tileCoord[2]) % 4, 1)
-    );
-}
+import { GetGridControl } from './classes/GetGridControl';
+import { UndoControl } from './classes/UndoControl';
+import { StartSimulationControl } from './classes/StartStimulationControl'
 
 let code = "3035"
 let name = "ETRS89-extended / LAEA Europe"
@@ -204,11 +43,12 @@ if (bbox[1] > bbox[3]) {
 const extent = applyTransform(worldExtent, fromLonLat, undefined, 8);
 newProj.setExtent(extent);
 
-let undo = new UndoControl()
-let startSim = new StartSimulation()
+let undoController = new UndoControl()
+let startSimulationController = new StartSimulationControl()
+let getGridController = new GetGridControl()
 
 const map = new Map({
-  controls: defaultControls().extend([undo, startSim]),
+  controls: defaultControls().extend([getGridController, undoController, startSimulationController]),
   layers: [
     new TileLayer({
       source:new OSM()
@@ -223,7 +63,8 @@ const map = new Map({
   }),
 });
 
-startSim.map = map
+getGridController.map = map
+startSimulationController.map = map
 
 /* GEOLOCATION */
 const geolocation = new Geolocation({
@@ -232,10 +73,6 @@ const geolocation = new Geolocation({
   },
   projection: newProj,
 });
-
-function el(id) {
-  return document.getElementById(id);
-}
 
 geolocation.setTracking(true);
 
@@ -282,15 +119,15 @@ const clickCell = function (pixel) {
   if (features[0] != undefined) {
     // Never-clicked cells have no style
     if (features[0].getStyle() == null) {
-      undo.stack.push(features[0])
+      undoController.stack.push(features[0])
     } else if (features[0].getStyle() != null) {
       if (features[0].getStyle().fill_.color_ == 'rgba(0, 0, 0, 0.1)') {
         // Cell has been clicked, removed from the stack and clicked again
-        undo.stack.push(features[0])
+        undoController.stack.push(features[0])
       }
     }
-    if (startSim.disabled == true) {
-      startSim.enableControl()
+    if (startSimulationController.disabled == true) {
+      startSimulationController.enableControl()
     }
     features[0].setStyle(new Style({
       stroke: new Stroke({
@@ -303,43 +140,11 @@ const clickCell = function (pixel) {
     }))
     features[0].setProperties({"fire": 1})
   }
-  if (vectLayer != undefined) {
-    console.log(vectLayer.getSource())
-    startSim.vectLayer = vectLayer
-  }
 };
 
 map.on('click', function (evt) {
   clickCell(evt.pixel);
 });
-
-
-/* GET GRID */
-class GetGridButton {
-  /**
-   * @param {Object} [opt_options] Control options.
-   */
-  x0 = 0
-  y0 = 0
-  xn = 0
-  yn = 0
-  disabled = true
-  constructor() {
-    this.element = document.getElementById('getgrid')
-  }
-
-  enableControl() {
-    this.disabled = false
-    this.element.className = 'ctrl-get-grid';
-  }
-
-  disableControl() {
-    this.disabled = true
-    this.element.className = 'ctrl-get-grid ctrl-get-grid-disabled';
-  }
-}
-
-var getGridButton = new GetGridButton()
 
 const iconStyle = new Style({
   image: new Icon({
@@ -370,38 +175,17 @@ map.on('singleclick', function (evt) {
 
     tapCount += 1
     if (tapCount == 1) {
-      getGridButton.x0 = evt.coordinate[0]
-      getGridButton.y0 = evt.coordinate[1]
+      getGridController.x0 = evt.coordinate[0]
+      getGridController.y0 = evt.coordinate[1]
     } else if (tapCount == 2) {
-      getGridButton.xn = evt.coordinate[0]
-      getGridButton.yn = evt.coordinate[1]
-      getGridButton.enableControl()
+      console.log("h")
+      getGridController.xn = evt.coordinate[0]
+      getGridController.yn = evt.coordinate[1]
+      getGridController.enableControl()
     }
   } else if (tapCount >= 2) {
     tapCount = 0
     pointSource.clear()   // delete markers
-    getGridButton.disableControl()
+    getGridController.disableControl()
   }
 });
-
-const styleFunction = function (feature) {
-      return styles[feature.getGeometry().getType()];
-};
-
-function clickGetGrid() {
-  getGrid(getGridButton.x0, getGridButton.y0, getGridButton.xn, getGridButton.yn)
-    .then(response => {
-      var grid = response.data
-      const vectorSource = new VectorSource({
-        features: new GeoJSON().readFeatures(grid),
-      });
-      const vectorLayer = new VectorLayer({
-        source: vectorSource,
-        style: styleFunction
-      });
-      map.addLayer(vectorLayer)
-      vectLayer = vectorLayer
-    })
-}
-
-getGridButton.element.addEventListener('click', clickGetGrid)

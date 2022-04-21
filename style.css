@@ -5,14 +5,9 @@ body {
 }
 .map {
   width: 100vw;
-  height: 95vh;
+  height: 100vh;
   margin-top: auto;
   background: #f8f4f0;
-}
-.toolbar {
-  background-color: #16315c;
-  width: auto;
-  height: 5vh;
 }
 .ol-control {
     right: 8px !important;
@@ -30,21 +25,11 @@ body {
   width: 60px !important;
 }
 .ctrl-get-grid {
-  top: 50%;
-  display: flex;
-  justify-content: flex-end;
-  transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-  -o-transform: translateY(-50%);
-  padding-top: 45px;
+  right: 200px !important;
 }
 .ctrl-get-grid button {
   width: 110px !important;
   height: 30px !important;
-  right: 10px;
-  background-color: #596a85;
 }
 .ctrl-get-grid-disabled button {
   cursor: not-allowed;
@@ -52,16 +37,16 @@ body {
   color: #c0c0c0;
   background-color: #6d727a;
 }
-.ctrl-start-sim {
+.ctrl-start-simulation {
   right: 60px !important;
 }
-.ctrl-start-sim button {
-  width: 150px !important;
+.ctrl-start-simulation button {
+  width: 110px !important;
   height: 30px !important;
 }
-.ctrl-start-sim-disabled button {
+.ctrl-start-simulation-disabled button {
   cursor: not-allowed;
   pointer-events: none;
   color: #c0c0c0;
-  background-color: #ffffff;
+  background-color: #6d727a;
 }
