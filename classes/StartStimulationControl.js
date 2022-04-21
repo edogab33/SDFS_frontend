@@ -47,8 +47,7 @@ export class StartSimulationControl extends Control {
     startSimulation(gjson).then(response => {
       console.log(response)
       this.simulationId = response.data
-      setTimeout(5000)
-      this.refresh()
+      setTimeout(()=>{this.refresh()}, 5000)
     })
     .catch(error => {
       console.log(error)
@@ -75,8 +74,8 @@ export class StartSimulationControl extends Control {
     };
 
     getSnapshot(this.simulationId).then(response => {
-      console.log(response)
       var grid = response.data
+      console.log(grid)
       const vectorSource = new VectorSource({
         features: new GeoJSON().readFeatures(grid),
       });
@@ -85,16 +84,18 @@ export class StartSimulationControl extends Control {
         source: vectorSource,
         style: styleFunction
       });
+      vectorLayer.set('id', 123)
 
       console.log(this.map.getLayers())
 
-      //this.map.getLayers().getArray()
-      //  .filter(layer => layer.get('name') === 'Marker')
-      //  .forEach(layer => map.removeLayer(layer));
+      // Remove old grid
+      this.map.getLayers().getArray()
+        .filter(layer => layer.get('id') == 123)
+        .forEach(layer => this.map.removeLayer(layer));
 
       this.map.addLayer(vectorLayer)
+      this.timer = setTimeout(()=>{this.refresh()}, 5000);
     })
-    this.timer = setTimeout(this.refresh, 5000);
   }
 
   stop() {
