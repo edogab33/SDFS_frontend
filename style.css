@@ -23,9 +23,10 @@ body {
 }
 .ctrl-undo button {
   width: 60px !important;
+  height: 30px !important;
 }
 .ctrl-get-grid {
-  right: 200px !important;
+  right: 230px !important;
 }
 .ctrl-get-grid button {
   width: 110px !important;
@@ -41,7 +42,7 @@ body {
   right: 60px !important;
 }
 .ctrl-start-simulation button {
-  width: 110px !important;
+  width: 150px !important;
   height: 30px !important;
 }
 .ctrl-start-simulation-disabled button {
