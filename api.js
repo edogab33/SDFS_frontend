@@ -10,3 +10,10 @@ export function startSimulation(initialState) {
     console.log(initialState)
     return axios.post(BASE_URL+'/start', initialState)
 }
+
+export function getSnapshot(simulationId) {
+    console.log(typeof simulationId)
+    var path = '/snapshot/'+parseInt(simulationId)
+    console.log(path)
+    return axios.get(BASE_URL+path)
+}

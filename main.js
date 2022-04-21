@@ -18,7 +18,7 @@ import {Control, defaults as defaultControls} from 'ol/control';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Geolocation from 'ol/Geolocation';
-import {getGrid, startSimulation} from './api'
+import {getGrid, getSnapshot, startSimulation} from './api'
 import { format } from 'ol/coordinate';
 
 const key =
@@ -86,6 +86,9 @@ class StartSimulation extends Control {
    */
   initState
   disabled = true
+  simulationId
+  timer
+  map
   constructor(opt_options) {
     const options = opt_options || {};
 
@@ -105,14 +108,46 @@ class StartSimulation extends Control {
 
   handleStartSimulation() {
     // send the initial state to the API Service
-    var gjson = new GeoJSON().writeFeatures(vectLayer.getSource().getFeatures())
-    
+    var gjson = JSON.parse(new GeoJSON().writeFeatures(vectLayer.getSource().getFeatures()))
     startSimulation(gjson).then(response => {
       console.log(response)
+      this.simulationId = response.data
+      setTimeout(5000)
+      this.refresh()
     })
     .catch(error => {
       console.log(error)
     })
+  }
+
+  refresh() {
+    console.log(this.i)
+    console.log(this.simulationId)
+    getSnapshot(this.simulationId).then(response => {
+      console.log(response)
+      var grid = response.data
+        const vectorSource = new VectorSource({
+          features: new GeoJSON().readFeatures(grid),
+        });
+        const vectorLayer = new VectorLayer({
+          source: vectorSource,
+          style: styleFunction
+        });
+        console.log(this.map.getLayers())
+        this.map.getLayers().getArray()
+          .filter(layer => layer.get('name') === 'Marker')
+          .forEach(layer => map.removeLayer(layer));
+        this.map.addLayer(vectorLayer)
+        vectLayer = vectorLayer
+    })
+    this.timer = setTimeout(this.refresh, 5000);
+  }
+
+  stop() {
+    if (this.timer) {
+      clearTimeout(this.timer)
+      this.timer = 0
+    }
   }
 
   enableControl() {
@@ -187,6 +222,8 @@ const map = new Map({
     zoom: 16,
   }),
 });
+
+startSim.map = map
 
 /* GEOLOCATION */
 const geolocation = new Geolocation({
