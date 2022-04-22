@@ -4,7 +4,7 @@ import {Vector as VectorLayer} from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
 import {Control} from 'ol/control';
 import {Fill, Stroke, Style} from 'ol/style';
-import {getSnapshot, startSimulation} from '../api'
+import {getSnapshot, startSimulation, stopSimulation} from '../api'
 
 export class StartSimulationControl extends Control {
     /**
@@ -51,10 +51,11 @@ export class StartSimulationControl extends Control {
 
       this.element.className = 'ol-control ctrl-stop-simulation';
       this.element.removeChild(this.element.firstChild);
-      console.log(this.element)
       this.element.appendChild(button)
 
-      setTimeout(()=>{this.refresh()}, 5000)
+      button.addEventListener('click', this.stop.bind(this), false);
+
+      this.timer = setTimeout(()=>{this.refresh()}, 5000)
     })
     .catch(error => {
       console.log(error)
@@ -62,8 +63,6 @@ export class StartSimulationControl extends Control {
   }
 
   refresh() {
-    console.log(this.simulationId)
-
     var styles = new Style({
       stroke: new Stroke({color: 'blue', width: 1}),
       fill: new Fill()
@@ -89,8 +88,6 @@ export class StartSimulationControl extends Control {
       });
       vectorLayer.set('id', 123)
 
-      console.log(this.map.getLayers())
-
       // Remove old grid
       this.map.getLayers().getArray()
         .filter(layer => layer.get('id') == 123)
@@ -99,13 +96,42 @@ export class StartSimulationControl extends Control {
       this.map.addLayer(vectorLayer)
       this.timer = setTimeout(()=>{this.refresh()}, 5000);
     })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   stop() {
-    if (this.timer) {
-      clearTimeout(this.timer)
-      this.timer = 0
-    }
+    stopSimulation(this.simulationId).then(response => {
+      if (this.timer != undefined) {
+        clearTimeout(this.timer)
+        this.timer = 0
+      }
+
+      const button = document.createElement('button');
+      button.innerHTML = 'Inizia simulazione';
+
+      this.element.className = 'ol-control ctrl-start-simulation';
+      this.element.removeChild(this.element.firstChild);
+      this.element.appendChild(button)
+
+      button.addEventListener('click', this.handleStartSimulation.bind(this), false);
+    })
+    .catch(error => {
+      if (this.timer != 0) {
+        clearTimeout(this.timer)
+        this.timer = 0
+      }
+
+      const button = document.createElement('button');
+      button.innerHTML = 'Inizia simulazione';
+
+      this.element.className = 'ol-control ctrl-start-simulation';
+      this.element.removeChild(this.element.firstChild);
+      this.element.appendChild(button)
+
+      console.error(error)
+    })
   }
 
   enableControl() {

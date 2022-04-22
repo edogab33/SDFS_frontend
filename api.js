@@ -7,13 +7,15 @@ export function getGrid(x0,y0,xn,yn) {
 }
 
 export function startSimulation(initialState) {
-    console.log(initialState)
     return axios.post(BASE_URL+'/start', initialState)
 }
 
+export function stopSimulation(simulationId) {
+    var path = '/stop'
+    return axios.post(BASE_URL+path, {"simulationId": simulationId})
+}
+
 export function getSnapshot(simulationId) {
-    console.log(typeof simulationId)
     var path = '/snapshot/'+parseInt(simulationId)
-    console.log(path)
     return axios.get(BASE_URL+path)
 }
