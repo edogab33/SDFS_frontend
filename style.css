@@ -3,51 +3,84 @@
 body {
   margin: 0;
 }
+
 .map {
   width: 100vw;
   height: 100vh;
   margin-top: auto;
   background: #f8f4f0;
 }
+
 .ol-control {
     right: 8px !important;
     top: auto !important;
 }
+
+.ol-control button {
+    background-color: rgba(65,66,84, 0.8) !important;
+}
+
+.ol-control:hover button {
+    background-color: rgba(65,66,84, 1) !important;
+}
+
+.ol-control-disabled:hover button {
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  background-color: rgba(65,66,84, 0.4) !important;
+}
+
+.ol-control-disabled button {
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  background-color: rgba(65,66,84, 0.3) !important;
+}
+
 .ol-zoom {
     right: 8px !important;
     left: auto !important;
 }
+
 .ctrl-undo {
   top: 60px !important;
   right: 60px !important;
 }
+
 .ctrl-undo button {
   width: 60px !important;
   height: 30px !important;
 }
+
 .ctrl-get-grid {
   right: 230px !important;
 }
+
 .ctrl-get-grid button {
   width: 110px !important;
   height: 30px !important;
 }
-.ctrl-get-grid-disabled button {
-  cursor: not-allowed;
-  pointer-events: none;
-  color: #c0c0c0;
-  background-color: #6d727a;
-}
+
 .ctrl-start-simulation {
   right: 60px !important;
 }
+
 .ctrl-start-simulation button {
   width: 150px !important;
   height: 30px !important;
 }
-.ctrl-start-simulation-disabled button {
-  cursor: not-allowed;
-  pointer-events: none;
-  color: #c0c0c0;
-  background-color: #6d727a;
+
+.ctrl-stop-simulation {
+  right: 60px !important;
+}
+
+.ctrl-stop-simulation button {
+  width: 150px !important;
+  height: 30px !important;
+  background-color: rgba(140,0,14, 0.8) !important;
+}
+
+.ctrl-stop-simulation:hover button {
+  width: 150px !important;
+  height: 30px !important;
+  background-color: rgba(140,0,14, 1) !important;
 }

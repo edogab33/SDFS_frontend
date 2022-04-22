@@ -22,7 +22,7 @@ export class GetGridControl extends Control {
     button.innerHTML = 'Ottieni griglia';
 
     const element = document.createElement('div');
-    element.className = 'ol-control ctrl-get-grid';
+    element.className = 'ol-control ol-control-disabled ctrl-get-grid';
     element.appendChild(button);
 
     super({
@@ -70,6 +70,6 @@ export class GetGridControl extends Control {
 
   disableControl() {
     this.disabled = true
-    this.element.className = 'ol-control ctrl-get-grid ctrl-get-grid-disabled';
+    this.element.className = 'ol-control ol-control-disabled ctrl-get-grid';
   }
 }
