@@ -57,20 +57,19 @@ export class StartSimulationControl extends Control {
   refresh() {
     console.log(this.simulationId)
 
-    const styles = {
-      'Polygon': new Style({
-        stroke: new Stroke({
-          color: 'blue',
-          width: 1,
-        }),
-        fill: new Fill({
-          color: 'rgba(0, 0, 0, 0.1)',
-        }),
-      }),
-    };
+    var styles = new Style({
+      stroke: new Stroke({color: 'blue', width: 1}),
+      fill: new Fill()
+    });
 
-    const styleFunction = function (feature) {
-      return styles[feature.getGeometry().getType()];
+    var styleFunction = function(feature) {
+      console.log(feature)
+      console.log(feature.get('fire'))
+      var fire = feature.get('fire');
+      var color = fire == 1 ? 'rgba(255, 0, 0, 0.3)' :
+                  'rgba(0, 0, 0, 0.1)';
+      styles.getFill().setColor(color);
+      return styles;
     };
 
     getSnapshot(this.simulationId).then(response => {
