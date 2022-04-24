@@ -27,6 +27,35 @@ let proj4def = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=
 let bbox = [84.17, -35.58, 24.6, 44.83]
 const newProjCode = 'EPSG:' + code;
 
+const addMarker = function (evt) {
+  console.log("coordinates: "+evt.coordinate);
+  if (tapCount < 2) {
+    const iconFeature = new Feature({
+      geometry: new Point(evt.coordinate),
+      name: 'Point'
+    });
+
+    iconFeature.setStyle(iconStyle);
+    pointSource.addFeature(iconFeature)
+    pointLayer.setSource(pointSource)
+    pointLayer.set('id', 456)
+
+    tapCount += 1
+    if (tapCount == 1) {
+      getGridController.x0 = evt.coordinate[0]
+      getGridController.y0 = evt.coordinate[1]
+    } else if (tapCount == 2) {
+      getGridController.xn = evt.coordinate[0]
+      getGridController.yn = evt.coordinate[1]
+      getGridController.enableControl()
+    }
+  } else if (tapCount >= 2) {
+    tapCount = 0
+    pointSource.clear()   // delete markers
+    getGridController.disableControl()
+  }
+}
+
 proj4.defs(newProjCode, proj4def);
 register(proj4);
 const newProj = getProjection(newProjCode);
@@ -44,7 +73,7 @@ const extent = applyTransform(worldExtent, fromLonLat, undefined, 8);
 newProj.setExtent(extent);
 
 let startSimulationController = new StartSimulationControl()
-let getGridController = new GetGridControl()
+let getGridController = new GetGridControl("", addMarker)
 let undoController = new UndoControl("", startSimulationController)
 
 const map = new Map({
@@ -163,30 +192,4 @@ const pointLayer = new VectorLayer();
 map.addLayer(pointLayer)
 let tapCount = 0
 
-map.on('singleclick', function (evt) {
-  console.log("coordinates: "+evt.coordinate);
-  if (tapCount < 2) {
-    const iconFeature = new Feature({
-      geometry: new Point(evt.coordinate),
-      name: 'Point'
-    });
-
-    iconFeature.setStyle(iconStyle);
-    pointSource.addFeature(iconFeature)
-    pointLayer.setSource(pointSource)
-
-    tapCount += 1
-    if (tapCount == 1) {
-      getGridController.x0 = evt.coordinate[0]
-      getGridController.y0 = evt.coordinate[1]
-    } else if (tapCount == 2) {
-      getGridController.xn = evt.coordinate[0]
-      getGridController.yn = evt.coordinate[1]
-      getGridController.enableControl()
-    }
-  } else if (tapCount >= 2) {
-    tapCount = 0
-    pointSource.clear()   // delete markers
-    getGridController.disableControl()
-  }
-});
+map.on('singleclick', addMarker);

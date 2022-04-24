@@ -15,7 +15,8 @@ export class GetGridControl extends Control {
   yn = 0
   map
   disabled = true
-  constructor(opt_options) {
+  addMarker
+  constructor(opt_options, addMarker) {
     const options = opt_options || {};
 
     const button = document.createElement('button');
@@ -29,6 +30,8 @@ export class GetGridControl extends Control {
       element: element,
       target: options.target,
     });
+
+    this.addMarker = addMarker
 
     button.addEventListener('click', this.handleGetGrid.bind(this), false);
   }
@@ -60,6 +63,12 @@ export class GetGridControl extends Control {
       });
       vectorLayer.set('id', 123)
       this.map.addLayer(vectorLayer)
+
+      // Remove grid selection markers
+      this.map.un('singleclick', this.addMarker)
+      this.map.getLayers().getArray()
+        .filter(layer => layer.get('id') == 456)
+        .forEach(layer => this.map.removeLayer(layer));
     })
   }
   
