@@ -78,6 +78,7 @@ export class GetGridControl extends Control {
         .forEach(layer => this.map.removeLayer(layer));
 
       this.deleteGridController.enableControl()
+      this.disableControl()
     })
   }
   
