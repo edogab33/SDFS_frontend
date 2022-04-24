@@ -20,6 +20,7 @@ import Geolocation from 'ol/Geolocation';
 import { GetGridControl } from './classes/GetGridControl';
 import { UndoControl } from './classes/UndoControl';
 import { StartSimulationControl } from './classes/StartStimulationControl'
+import { DeleteGridControl } from './classes/DeleteGridControl'
 
 let code = "3035"
 let name = "ETRS89-extended / LAEA Europe"
@@ -73,11 +74,12 @@ const extent = applyTransform(worldExtent, fromLonLat, undefined, 8);
 newProj.setExtent(extent);
 
 let startSimulationController = new StartSimulationControl()
-let getGridController = new GetGridControl("", addMarker)
+let deleteGridController = new DeleteGridControl("", addMarker)
+let getGridController = new GetGridControl("", addMarker, deleteGridController)
 let undoController = new UndoControl("", startSimulationController)
 
 const map = new Map({
-  controls: defaultControls().extend([getGridController, undoController, startSimulationController]),
+  controls: defaultControls().extend([getGridController, deleteGridController, undoController, startSimulationController]),
   layers: [
     new TileLayer({
       source:new OSM()
@@ -92,6 +94,7 @@ const map = new Map({
   }),
 });
 
+deleteGridController.map = map
 getGridController.map = map
 startSimulationController.map = map
 
@@ -185,6 +188,7 @@ const iconStyle = new Style({
     src: '/assets/icon.png',
   }),
 });
+
 const pointSource = new VectorSource({
   features: [],
 });

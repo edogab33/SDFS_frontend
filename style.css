@@ -60,6 +60,16 @@ body {
   height: 30px !important;
 }
 
+.ctrl-delete-grid {
+  top: 60px !important;
+  right: 190px !important;
+}
+
+.ctrl-delete-grid button {
+  width: 150px !important;
+  height: 30px !important;
+}
+
 .ctrl-start-simulation {
   right: 60px !important;
 }

@@ -16,7 +16,8 @@ export class GetGridControl extends Control {
   map
   disabled = true
   addMarker
-  constructor(opt_options, addMarker) {
+  deleteGridController
+  constructor(opt_options, addMarker, deleteGridController) {
     const options = opt_options || {};
 
     const button = document.createElement('button');
@@ -32,6 +33,7 @@ export class GetGridControl extends Control {
     });
 
     this.addMarker = addMarker
+    this.deleteGridController = deleteGridController
 
     button.addEventListener('click', this.handleGetGrid.bind(this), false);
   }
@@ -52,8 +54,13 @@ export class GetGridControl extends Control {
     const styleFunction = function (feature) {
       return styles[feature.getGeometry().getType()];
     };
+
     getGrid(this.x0, this.y0, this.xn, this.yn).then(response => {
       var grid = response.data
+      if (grid.features.length == 0) {
+        return
+      }
+
       const vectorSource = new VectorSource({
         features: new GeoJSON().readFeatures(grid),
       });
@@ -69,6 +76,8 @@ export class GetGridControl extends Control {
       this.map.getLayers().getArray()
         .filter(layer => layer.get('id') == 456)
         .forEach(layer => this.map.removeLayer(layer));
+
+      this.deleteGridController.enableControl()
     })
   }
   
