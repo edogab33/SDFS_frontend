@@ -37,11 +37,12 @@ export class StartSimulationControl extends Control {
 
   handleStartSimulation() {
     // send the initial state to the API Service
-
-    // TODO: Transform the start simulation button into a stop simulation one
     var gridLayer = this.map.getLayers().getArray().filter(layer => layer.get('id') == 123)[0]
     console.log(gridLayer)
+    console.log(gridLayer.getSource().getFeatures())
+    console.log(gridLayer.getSource())
     var gjson = JSON.parse(new GeoJSON().writeFeatures(gridLayer.getSource().getFeatures()))
+    console.log(gjson)
     startSimulation(gjson).then(response => {
       console.log(response)
       this.simulationId = response.data

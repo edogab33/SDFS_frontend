@@ -6,7 +6,8 @@ export class UndoControl extends Control {
    * @param {Object} [opt_options] Control options.
    */
   stack = []
-  constructor(opt_options, vectLayer) {
+  startSimulationController = 0
+  constructor(opt_options, startSimulationController) {
     const options = opt_options || {};
 
     const button = document.createElement('button');
@@ -20,8 +21,7 @@ export class UndoControl extends Control {
       element: element,
       target: options.target,
     });
-
-    this.vectLayer = vectLayer
+    this.startSimulationController = startSimulationController
 
     button.addEventListener('click', this.handleUndo.bind(this), false);
   }
@@ -31,6 +31,11 @@ export class UndoControl extends Control {
       console.log(this.stack)
       let feature = this.stack.pop()
       console.log(this.stack)
+      if (this.stack.length > 0) {
+        this.startSimulationController.enableControl()
+      } else {
+        this.startSimulationController.disableControl()
+      }
       feature.setStyle(new Style({
         stroke: new Stroke({
           color: 'blue',
@@ -40,6 +45,8 @@ export class UndoControl extends Control {
           color: 'rgba(0, 0, 0, 0.1)',
         })
       }))
+    } else {
+      this.startSimulationController.disableControl()
     }
   }
 }

@@ -43,9 +43,9 @@ if (bbox[1] > bbox[3]) {
 const extent = applyTransform(worldExtent, fromLonLat, undefined, 8);
 newProj.setExtent(extent);
 
-let undoController = new UndoControl()
 let startSimulationController = new StartSimulationControl()
 let getGridController = new GetGridControl()
+let undoController = new UndoControl("", startSimulationController)
 
 const map = new Map({
   controls: defaultControls().extend([getGridController, undoController, startSimulationController]),
@@ -126,9 +126,11 @@ const clickCell = function (pixel) {
         undoController.stack.push(features[0])
       }
     }
-    if (startSimulationController.disabled == true) {
+
+    if (undoController.stack.length > 0) {
       startSimulationController.enableControl()
     }
+
     features[0].setStyle(new Style({
       stroke: new Stroke({
         color: 'blue',
@@ -178,7 +180,6 @@ map.on('singleclick', function (evt) {
       getGridController.x0 = evt.coordinate[0]
       getGridController.y0 = evt.coordinate[1]
     } else if (tapCount == 2) {
-      console.log("h")
       getGridController.xn = evt.coordinate[0]
       getGridController.yn = evt.coordinate[1]
       getGridController.enableControl()
