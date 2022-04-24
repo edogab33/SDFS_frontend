@@ -6,7 +6,7 @@ import VectorTileLayer from 'ol/layer/VectorTile';
 import VectorTileSource from 'ol/source/VectorTile';
 import View from 'ol/View';
 import proj4 from 'proj4';
-import {Fill, Icon, Stroke, Style, Text, Circle as CircleStyle} from 'ol/style';
+import {Fill, Icon, Stroke, Style, Text, Circle} from 'ol/style';
 import {get as getProjection, getTransform} from 'ol/proj';
 import {register} from 'ol/proj/proj4';
 import {applyTransform, approximatelyEquals} from 'ol/extent';
@@ -117,7 +117,7 @@ geolocation.on('change:accuracyGeometry', function () {
 const positionFeature = new Feature();
 positionFeature.setStyle(
   new Style({
-    image: new CircleStyle({
+    image: new Circle({
       radius: 6,
       fill: new Fill({
         color: '#3399CC',
@@ -180,14 +180,21 @@ const clickCell = function (pixel) {
 map.on('click', function (evt) {
   clickCell(evt.pixel);
 });
-
+ const fill = new Fill({
+   color: 'rgba(255,255,255,0.4)',
+ });
+ const stroke = new Stroke({
+   color: '#3399CC',
+   width: 1.25,
+ });
 const iconStyle = new Style({
-  image: new Icon({
-    //anchor: [0.5, 46],
-    anchorXUnits: 'fraction',
-    anchorYUnits: 'pixels',
-    src: '/assets/icon.png',
+  image: new Circle({
+    fill: fill,
+    stroke: stroke,
+    radius: 5,
   }),
+  fill: fill,
+  stroke: stroke,
 });
 
 const pointSource = new VectorSource({
