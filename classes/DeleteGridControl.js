@@ -6,6 +6,7 @@ export class DeleteGridControl extends Control {
    */
   map
   addMarker
+  getGridController
   constructor(opt_options, addMarker) {
     const options = opt_options || {};
 
@@ -33,6 +34,7 @@ export class DeleteGridControl extends Control {
 
     this.map.on('singleclick', this.addMarker)
     this.disableControl()
+    this.getGridController.disableControl()
   }
   
   enableControl() {

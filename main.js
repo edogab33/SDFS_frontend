@@ -94,6 +94,7 @@ const map = new Map({
   }),
 });
 
+deleteGridController.getGridController = getGridController
 deleteGridController.map = map
 getGridController.map = map
 startSimulationController.map = map
