@@ -42,8 +42,9 @@ export class StartSimulationControl extends Control {
     console.log(gridLayer.getSource().getFeatures())
     console.log(gridLayer.getSource())
     var gjson = JSON.parse(new GeoJSON().writeFeatures(gridLayer.getSource().getFeatures()))
-    console.log(gjson)
+
     startSimulation(gjson).then(response => {
+      console.log("Simulation started:")
       console.log(response)
       this.simulationId = response.data
 
@@ -56,7 +57,7 @@ export class StartSimulationControl extends Control {
 
       button.addEventListener('click', this.stop.bind(this), false);
 
-      this.timer = setTimeout(()=>{this.refresh()}, 5000)
+      this.timer = setTimeout(()=>{this.refresh()}, 15000)
     })
     .catch(error => {
       console.log(error)
@@ -71,13 +72,21 @@ export class StartSimulationControl extends Control {
 
     var styleFunction = function(feature) {
       var fire = feature.get('fire');
-      var color = fire == 1 ? 'rgba(255, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.1)';
+      var color = ''
+      if (fire == 0) {
+        color = 'rgba(0, 0, 0, 0.1)'
+      } else if (fire == 1) {
+        color = 'rgba(255, 0, 0, 0.3)'
+      } else {
+        color = 'rgba(255, 255, 0, 0.3)'
+      }
       styles.getFill().setColor(color);
       return styles;
     };
 
     getSnapshot(this.simulationId).then(response => {
       var grid = response.data
+      console.log("New grid from snapshot:")
       console.log(grid)
       const vectorSource = new VectorSource({
         features: new GeoJSON().readFeatures(grid),
@@ -95,7 +104,7 @@ export class StartSimulationControl extends Control {
         .forEach(layer => this.map.removeLayer(layer));
 
       this.map.addLayer(vectorLayer)
-      this.timer = setTimeout(()=>{this.refresh()}, 5000);
+      this.timer = setTimeout(()=>{this.refresh()}, 15000);
     })
     .catch(error => {
       console.log(error)
