@@ -88,22 +88,27 @@ export class StartSimulationControl extends Control {
       var grid = response.data
       console.log("New grid from snapshot:")
       console.log(grid)
-      const vectorSource = new VectorSource({
-        features: new GeoJSON().readFeatures(grid),
-      });
 
-      const vectorLayer = new VectorLayer({
-        source: vectorSource,
-        style: styleFunction
-      });
-      vectorLayer.set('id', 123)
+      if (grid.features.length > 0) {
+        // Update the grid only if there are updates
+        const vectorSource = new VectorSource({
+          features: new GeoJSON().readFeatures(grid),
+        });
 
-      // Remove old grid
-      this.map.getLayers().getArray()
-        .filter(layer => layer.get('id') == 123)
-        .forEach(layer => this.map.removeLayer(layer));
+        const vectorLayer = new VectorLayer({
+          source: vectorSource,
+          style: styleFunction
+        });
+        vectorLayer.set('id', 123)
 
-      this.map.addLayer(vectorLayer)
+        // Remove old grid
+        this.map.getLayers().getArray()
+          .filter(layer => layer.get('id') == 123)
+          .forEach(layer => this.map.removeLayer(layer));
+
+        this.map.addLayer(vectorLayer)
+      }
+
       this.timer = setTimeout(()=>{this.refresh()}, 15000);
     })
     .catch(error => {
