@@ -13,7 +13,7 @@ import {applyTransform, approximatelyEquals} from 'ol/extent';
 import {OSM, Vector as VectorSource} from 'ol/source'
 import TileLayer from 'ol/layer/Tile';
 import {Vector as VectorLayer} from 'ol/layer';
-import {defaults as defaultControls} from 'ol/control';
+import {defaults as defaultControls, ScaleLine} from 'ol/control';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Geolocation from 'ol/Geolocation';
@@ -75,6 +75,13 @@ if (bbox[1] > bbox[3]) {
 const extent = applyTransform(worldExtent, fromLonLat, undefined, 8);
 newProj.setExtent(extent);
 
+var scalebar = new ScaleLine({
+  units: 'metric',
+  bar: true,
+  steps: 4,
+  minWidth: 140,
+});
+
 let startSimulationController = new StartSimulationControl()
 let deleteGridController = new DeleteGridControl("", addMarker)
 let getGridController = new GetGridControl("", addMarker, deleteGridController)
@@ -84,7 +91,7 @@ let getSnapshotController = new GetSnapshotControl()
 
 const map = new Map({
   controls: defaultControls().extend([getGridController, deleteGridController, undoController, startSimulationController, 
-                                      horizonController, getSnapshotController]),
+                                      horizonController, getSnapshotController, scalebar]),
   layers: [
     new TileLayer({
       source:new OSM()
