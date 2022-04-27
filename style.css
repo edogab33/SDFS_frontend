@@ -113,6 +113,7 @@ body {
 .ctrl-get-snapshot button {
   width: 150px !important;
   height: 25px !important;
+  margin: 10px !important;
 }
 
 .slider {
