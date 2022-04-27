@@ -1,4 +1,3 @@
-import 'ol/ol.css';
 import {Vector as VectorSource} from 'ol/source'
 import {Vector as VectorLayer} from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -15,7 +14,8 @@ export class StartSimulationControl extends Control {
   simulationId
   timer
   map
-  constructor(opt_options) {
+  horizonControl
+  constructor(opt_options, horizonControl) {
     const options = opt_options || {};
 
     const button = document.createElement('button');
@@ -31,17 +31,16 @@ export class StartSimulationControl extends Control {
     });
 
     this.element = element
-
+    this.horizonControl = horizonControl
     button.addEventListener('click', this.handleStartSimulation.bind(this), false);
   }
 
   handleStartSimulation() {
     // send the initial state to the API Service
     var gridLayer = this.map.getLayers().getArray().filter(layer => layer.get('id') == 123)[0]
-    console.log(gridLayer)
-    console.log(gridLayer.getSource().getFeatures())
-    console.log(gridLayer.getSource())
+    
     var gjson = JSON.parse(new GeoJSON().writeFeatures(gridLayer.getSource().getFeatures()))
+    gjson.horizon = this.horizonControl.val.innerHTML
 
     startSimulation(gjson).then(response => {
       console.log("Simulation started:")
@@ -57,7 +56,7 @@ export class StartSimulationControl extends Control {
 
       button.addEventListener('click', this.stop.bind(this), false);
 
-      this.timer = setTimeout(()=>{this.refresh()}, 15000)
+      this.timer = setTimeout(()=>{this.refresh()}, 5000)
     })
     .catch(error => {
       console.log(error)
@@ -109,7 +108,7 @@ export class StartSimulationControl extends Control {
         this.map.addLayer(vectorLayer)
       }
 
-      this.timer = setTimeout(()=>{this.refresh()}, 15000);
+      this.timer = setTimeout(()=>{this.refresh()}, 5000);
     })
     .catch(error => {
       console.log(error)

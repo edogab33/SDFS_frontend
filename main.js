@@ -19,8 +19,10 @@ import Point from 'ol/geom/Point';
 import Geolocation from 'ol/Geolocation';
 import { GetGridControl } from './classes/GetGridControl';
 import { UndoControl } from './classes/UndoControl';
-import { StartSimulationControl } from './classes/StartStimulationControl'
+import { StartSimulationControl } from './classes/StartSimulationControl'
 import { DeleteGridControl } from './classes/DeleteGridControl'
+import { HorizonControl } from './classes/HorizonControl'
+import { GetSnapshotControl } from './classes/GetSnapshotControl'
 
 let code = "3035"
 let name = "ETRS89-extended / LAEA Europe"
@@ -77,9 +79,11 @@ let startSimulationController = new StartSimulationControl()
 let deleteGridController = new DeleteGridControl("", addMarker)
 let getGridController = new GetGridControl("", addMarker, deleteGridController)
 let undoController = new UndoControl("", startSimulationController)
+let horizonController = new HorizonControl()
+let GetSnapshotController = new GetSnapshotControl()
 
 const map = new Map({
-  controls: defaultControls().extend([getGridController, deleteGridController, undoController, startSimulationController]),
+  controls: defaultControls().extend([getGridController, deleteGridController, undoController, startSimulationController, horizonController]),
   layers: [
     new TileLayer({
       source:new OSM()
@@ -98,6 +102,8 @@ deleteGridController.getGridController = getGridController
 deleteGridController.map = map
 getGridController.map = map
 startSimulationController.map = map
+horizonController.activateSlider()
+startSimulationController.horizonControl = horizonController
 
 /* GEOLOCATION */
 const geolocation = new Geolocation({
