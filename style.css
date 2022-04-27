@@ -107,13 +107,26 @@ body {
 
 .ctrl-get-snapshot {
   left: 8px !important;
-  width: 400px;
+  padding-left: 10px !important;
+  width: 180px;
 }
 
 .ctrl-get-snapshot button {
   width: 150px !important;
   height: 25px !important;
   margin: 10px !important;
+}
+
+#plus {
+  width: 1.375em !important;
+  height: 1.375em !important;
+  display: inline;
+}
+
+#minus {
+  width: 1.375em !important;
+  height: 1.375em !important;
+  display: inline;
 }
 
 .slider {

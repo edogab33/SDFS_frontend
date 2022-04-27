@@ -9,22 +9,45 @@ export class GetSnapshotControl extends Control {
     /**
    * @param {Object} [opt_options] Control options.
    */
-  elapsedMinutesSlider
   simulationId = 'nessuno'
   elapsedminutes
   map
   disabled = true
+  max = 20
   constructor(opt_options) {
     const options = opt_options || {};
 
+    let simulationId = 'nessuno'
     const element = document.createElement('div');
     element.className = 'ol-control ol-control-disabled ctrl-get-snapshot'
-    element.innerHTML = '<p id="simid">Simulation id: </p>'+
-                        'Snapshot: <input type="range" min="'+0+'" max="'+2000+'" step="10" value="0" class="slider" id="elapsedminutes">'
+    element.innerHTML = '<p id="simid">Simulation id: '+simulationId+'</p>'
+
+    const button_plus = document.createElement('button')
+    button_plus.innerHTML = '+'
+    button_plus.id = 'plus'
+    //button_plus.className = 'ol-control'
+
+    const button_minus = document.createElement('button')
+    button_minus.innerHTML = '-'
+    button_minus.id = 'minus'
+    //button_minus.className = 'ol-control'
 
     const val = document.createElement('span')
     val.id = 'val_em'
-    element.appendChild(val)
+    val.innerHTML = 0
+
+    const label_val = document.createElement('span')
+    label_val.innerHTML = 'Minuti: '
+
+    const nested_div = document.createElement('div')
+    nested_div.className = ''
+
+    nested_div.appendChild(label_val)
+    nested_div.appendChild(button_minus)
+    nested_div.appendChild(val)
+    nested_div.appendChild(button_plus)
+
+    element.appendChild(nested_div)
 
     const button = document.createElement('button');
     button.innerHTML = 'Scarica snapshot';
@@ -35,9 +58,13 @@ export class GetSnapshotControl extends Control {
       target: options.target,
     });
 
-    this.elapsedminutes = val
+    this.elapsedminutes = 0
+    this.val = val
     this.element = element
-    button.addEventListener('click', this.handleGetSnapshot.bind(this), false);
+    this.simulationId = simulationId
+    button.addEventListener('click', this.handleGetSnapshot.bind(this), false)
+    button_plus.addEventListener('click', this.incrementMinutes.bind(this), false)
+    button_minus.addEventListener('click', this.decrementMinutes.bind(this), false)
   }
 
   handleGetSnapshot() {
@@ -60,7 +87,7 @@ export class GetSnapshotControl extends Control {
       return styles;
     };
 
-    getSnapshot(this.simulationId, this.elapsedminutes.innerHTML).then(response => {
+    getSnapshot(this.simulationId, this.elapsedminutes).then(response => {
       var grid = response.data
       console.log("New grid from snapshot:")
       console.log(grid)
@@ -90,17 +117,29 @@ export class GetSnapshotControl extends Control {
     })
   }
 
-  activateSlider(max) {
+  incrementMinutes() {
+    console.log("inc")
+    if (this.elapsedminutes < this.max) {
+      this.elapsedminutes += 10
+      this.val.innerHTML = this.elapsedminutes
+    }
+  }
+
+  decrementMinutes() {
+    if (this.elapsedminutes > 0) {
+      this.elapsedminutes -= 10
+      this.val.innerHTML = this.elapsedminutes
+    }
+  }
+
+  setMax(max) {
+    this.elapsedMinutesSlider.max = max
+  }
+
+  setSimulationId(simulationId) {
+    this.simulationId = simulationId
     document.getElementById('simid').innerHTML = '<p id="simid">Simulation id: '+ this.simulationId +'</p>'
 
-    this.elapsedMinutesSlider = document.getElementById('elapsedminutes')
-    this.elapsedMinutesSlider.max = max
-
-    this.elapsedminutes.innerHTML = this.elapsedMinutesSlider.value
-
-    this.elapsedMinutesSlider.oninput = function() {
-      document.getElementById('val_em').innerHTML = document.getElementById('elapsedminutes').value
-    }
   }
 
   enableControl() {

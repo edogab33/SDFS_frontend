@@ -107,7 +107,6 @@ getSnapshotController.map = map
 horizonController.activateSlider()
 startSimulationController.horizonControl = horizonController
 startSimulationController.getSnapshotControl = getSnapshotController
-getSnapshotController.activateSlider()
 
 /* GEOLOCATION */
 const geolocation = new Geolocation({

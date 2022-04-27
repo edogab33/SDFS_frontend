@@ -57,8 +57,8 @@ export class StartSimulationControl extends Control {
 
       button.addEventListener('click', this.stop.bind(this), false);
 
-      this.getSnapshotControl.simulationId = this.simulationId
-      this.getSnapshotControl.activateSlider(this.horizonControl.val.innerHTML)
+      this.getSnapshotControl.setSimulationId(this.simulationId)
+      this.getSnapshotControl.max = this.horizonControl.val.innerHTML
       this.getSnapshotControl.enableControl()
     })
     .catch(error => {
@@ -81,8 +81,6 @@ export class StartSimulationControl extends Control {
       this.element.appendChild(button)
 
       button.addEventListener('click', this.handleStartSimulation.bind(this), false);
-
-      this.getSnapshotControl.disableControl()
     })
     .catch(error => {
       if (this.timer != 0) {
