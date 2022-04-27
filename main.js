@@ -80,10 +80,11 @@ let deleteGridController = new DeleteGridControl("", addMarker)
 let getGridController = new GetGridControl("", addMarker, deleteGridController)
 let undoController = new UndoControl("", startSimulationController)
 let horizonController = new HorizonControl()
-let GetSnapshotController = new GetSnapshotControl()
+let getSnapshotController = new GetSnapshotControl()
 
 const map = new Map({
-  controls: defaultControls().extend([getGridController, deleteGridController, undoController, startSimulationController, horizonController]),
+  controls: defaultControls().extend([getGridController, deleteGridController, undoController, startSimulationController, 
+                                      horizonController, getSnapshotController]),
   layers: [
     new TileLayer({
       source:new OSM()
@@ -102,8 +103,11 @@ deleteGridController.getGridController = getGridController
 deleteGridController.map = map
 getGridController.map = map
 startSimulationController.map = map
+getSnapshotController.map = map
 horizonController.activateSlider()
 startSimulationController.horizonControl = horizonController
+startSimulationController.getSnapshotControl = getSnapshotController
+getSnapshotController.activateSlider()
 
 /* GEOLOCATION */
 const geolocation = new Geolocation({

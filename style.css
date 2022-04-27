@@ -105,10 +105,20 @@ body {
   width: 280px;
 }
 
+.ctrl-get-snapshot {
+  left: 8px !important;
+  width: 400px;
+}
+
+.ctrl-get-snapshot button {
+  width: 150px !important;
+  height: 25px !important;
+}
+
 .slider {
   -webkit-appearance: none;  /* Override default CSS styles */
   appearance: none;
-  /* width: 70%; */
+  width: 60%; 
   height: 15px;
   border-radius: 5px;  
   background: #d3d3d3; /* Grey background */
@@ -138,7 +148,7 @@ body {
 
 .slider::-moz-range-thumb {
   width: 25px; /* Set a specific slider handle width */
- height: 25px;
+  height: 25px;
   border-radius: 50%;
   background: rgb(65,66,84); /* Green background */
   cursor: pointer; /* Cursor on hover */

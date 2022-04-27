@@ -15,6 +15,7 @@ export class StartSimulationControl extends Control {
   timer
   map
   horizonControl
+  getSnapshotControl
   constructor(opt_options, horizonControl) {
     const options = opt_options || {};
 
@@ -56,59 +57,8 @@ export class StartSimulationControl extends Control {
 
       button.addEventListener('click', this.stop.bind(this), false);
 
-      this.timer = setTimeout(()=>{this.refresh()}, 5000)
-    })
-    .catch(error => {
-      console.log(error)
-    })
-  }
-
-  refresh() {
-    var styles = new Style({
-      stroke: new Stroke({color: 'blue', width: 1}),
-      fill: new Fill()
-    });
-
-    var styleFunction = function(feature) {
-      var fire = feature.get('fire');
-      var color = ''
-      if (fire == 0) {
-        color = 'rgba(0, 0, 0, 0.1)'
-      } else if (fire == 1) {
-        color = 'rgba(255, 0, 0, 0.3)'
-      } else {
-        color = 'rgba(255, 255, 0, 0.3)'
-      }
-      styles.getFill().setColor(color);
-      return styles;
-    };
-
-    getSnapshot(this.simulationId).then(response => {
-      var grid = response.data
-      console.log("New grid from snapshot:")
-      console.log(grid)
-
-      if (grid.features.length > 0) {
-        // Update the grid only if there are updates
-        const vectorSource = new VectorSource({
-          features: new GeoJSON().readFeatures(grid),
-        });
-
-        const vectorLayer = new VectorLayer({
-          source: vectorSource,
-          style: styleFunction
-        });
-        vectorLayer.set('id', 123)
-
-        // Remove old grid
-        this.map.getLayers().getArray()
-          .filter(layer => layer.get('id') == 123)
-          .forEach(layer => this.map.removeLayer(layer));
-
-        this.map.addLayer(vectorLayer)
-      }
-
-      this.timer = setTimeout(()=>{this.refresh()}, 5000);
+      this.getSnapshotControl.simulationId = this.simulationId
+      this.getSnapshotControl.enableControl()
     })
     .catch(error => {
       console.log(error)
@@ -130,6 +80,8 @@ export class StartSimulationControl extends Control {
       this.element.appendChild(button)
 
       button.addEventListener('click', this.handleStartSimulation.bind(this), false);
+
+      this.getSnapshotControl.disableControl()
     })
     .catch(error => {
       if (this.timer != 0) {
@@ -144,11 +96,14 @@ export class StartSimulationControl extends Control {
       this.element.removeChild(this.element.firstChild);
       this.element.appendChild(button)
 
+      this.getSnapshotControl.disableControl()
+      
       console.error(error)
     })
   }
 
   enableControl() {
+    console.log("enable")
     this.disabled = false
     this.element.className = 'ol-control ctrl-start-simulation';
   }
