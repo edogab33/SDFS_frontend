@@ -58,6 +58,7 @@ export class StartSimulationControl extends Control {
       button.addEventListener('click', this.stop.bind(this), false);
 
       this.getSnapshotControl.simulationId = this.simulationId
+      this.getSnapshotControl.activateSlider(this.horizonControl.val.innerHTML)
       this.getSnapshotControl.enableControl()
     })
     .catch(error => {
@@ -95,8 +96,6 @@ export class StartSimulationControl extends Control {
       this.element.className = 'ol-control ctrl-start-simulation';
       this.element.removeChild(this.element.firstChild);
       this.element.appendChild(button)
-
-      this.getSnapshotControl.disableControl()
       
       console.error(error)
     })

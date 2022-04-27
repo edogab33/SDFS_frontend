@@ -10,10 +10,8 @@ export class GetSnapshotControl extends Control {
    * @param {Object} [opt_options] Control options.
    */
   elapsedMinutesSlider
-  simulationId
+  simulationId = 'nessuno'
   elapsedminutes
-  min = 10
-  max = 2000
   map
   disabled = true
   constructor(opt_options) {
@@ -21,7 +19,8 @@ export class GetSnapshotControl extends Control {
 
     const element = document.createElement('div');
     element.className = 'ol-control ol-control-disabled ctrl-get-snapshot'
-    element.innerHTML = 'Snapshot: <input type="range" min="'+0+'" max="'+2000+'" step="10" value="0" class="slider" id="elapsedminutes">'
+    element.innerHTML = '<p id="simid">Simulation id: </p>'+
+                        'Snapshot: <input type="range" min="'+0+'" max="'+2000+'" step="10" value="0" class="slider" id="elapsedminutes">'
 
     const val = document.createElement('span')
     val.id = 'val_em'
@@ -91,8 +90,11 @@ export class GetSnapshotControl extends Control {
     })
   }
 
-  activateSlider() {
+  activateSlider(max) {
+    document.getElementById('simid').innerHTML = '<p id="simid">Simulation id: '+ this.simulationId +'</p>'
+
     this.elapsedMinutesSlider = document.getElementById('elapsedminutes')
+    this.elapsedMinutesSlider.max = max
 
     this.elapsedminutes.innerHTML = this.elapsedMinutesSlider.value
 
