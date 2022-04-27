@@ -103,12 +103,18 @@ body {
   right: 60px !important;
   top: 120px !important;
   width: 280px;
+  border: solid rgb(0, 0, 0) !important;
+  border-width: thin !important;
+  padding-top: 5px !important;
+  padding-bottom: 3px !important;
 }
 
 .ctrl-get-snapshot {
   left: 8px !important;
   padding-left: 10px !important;
   width: 180px;
+  border: solid rgb(0, 0, 0) !important;
+  border-width: thin !important;
 }
 
 .ctrl-get-snapshot button {
@@ -142,6 +148,7 @@ body {
   transition: opacity .2s;
   right: 1px;
   top: 1px;
+  margin-right: 15px !important;
 }
 
 /* Mouse-over effects */
