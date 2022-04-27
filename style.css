@@ -100,14 +100,15 @@ body {
 }
 
 .ctrl-horizon {
-  right: 50% !important;
-  width: max-content;
+  right: 60px !important;
+  top: 120px !important;
+  width: 280px;
 }
 
 .slider {
   -webkit-appearance: none;  /* Override default CSS styles */
   appearance: none;
-  width: 100%; /* Full-width */
+  /* width: 70%; */
   height: 15px;
   border-radius: 5px;  
   background: #d3d3d3; /* Grey background */
@@ -115,6 +116,8 @@ body {
   opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
   transition: opacity .2s;
+  right: 1px;
+  top: 1px;
 }
 
 /* Mouse-over effects */

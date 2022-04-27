@@ -19,7 +19,7 @@ export class HorizonControl extends Control {
     element.appendChild(label)
     element.innerHTML = 'Horizon: <input type="range" min="'+10+'" max="'+2000+'" value="50" class="slider" id="horizon">'
 
-    const val = document.createElement('p')
+    const val = document.createElement('span')
     val.id = 'val'
     element.appendChild(val)
 
@@ -35,10 +35,10 @@ export class HorizonControl extends Control {
   activateSlider() {
     this.horizonSlider = document.getElementById('horizon')
 
-    this.val.innerHTML = this.horizonSlider.value
+    this.val.innerHTML = " " + this.horizonSlider.value + " minuti"
 
     this.horizonSlider.oninput = function() {
-      document.getElementById('val').innerHTML = document.getElementById('horizon').value
+      document.getElementById('val').innerHTML = " " + document.getElementById('horizon').value + " minuti"
     }
   }
 }
