@@ -70,6 +70,8 @@ export class GetGridControl extends Control {
       });
       vectorLayer.set('id', 123)
       this.map.addLayer(vectorLayer)
+      
+      console.log(grid)
 
       // Remove grid selection markers
       this.map.un('singleclick', this.addMarker)

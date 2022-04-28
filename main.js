@@ -102,7 +102,7 @@ const map = new Map({
     projection: newProj,
     center: [4559505, 2121005],
     extent: extent,
-    zoom: 16,
+    zoom: 12,
   }),
 });
 
