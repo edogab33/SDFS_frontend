@@ -14,6 +14,8 @@ export class GetSnapshotControl extends Control {
   map
   disabled = true
   max = 20
+  val
+  elapsedminutes_ui
   constructor(opt_options) {
     const options = opt_options || {};
 
@@ -21,6 +23,10 @@ export class GetSnapshotControl extends Control {
     const element = document.createElement('div');
     element.className = 'ol-control ol-control-disabled ctrl-get-snapshot'
     element.innerHTML = '<p id="simid">Simulation id: '+simulationId+'</p>'
+    const elapsedminutes_text = document.createElement('p')
+    elapsedminutes_text.id = 'elapsedminutes_text'
+    elapsedminutes_text.innerHTML = 'Elapsed minutes: 0'
+    element.appendChild(elapsedminutes_text)
 
     const button_plus = document.createElement('button')
     button_plus.innerHTML = '+'
@@ -59,7 +65,8 @@ export class GetSnapshotControl extends Control {
     });
 
     this.elapsedminutes = 0
-    this.val = val
+    this.elapsedminutes_ui = elapsedminutes_text
+    this.val = val    // selectable minutes
     this.element = element
     this.simulationId = simulationId
     button.addEventListener('click', this.handleGetSnapshot.bind(this), false)
@@ -91,9 +98,11 @@ export class GetSnapshotControl extends Control {
       var grid = response.data
       console.log("New grid from snapshot:")
       console.log(grid)
-
+      
       if (grid.features.length > 0) {
-        // Update the grid only if there are updates
+        // Update the grid and elapsed time only if there are updates
+        this.elapsedminutes_ui.innerHTML = 'Elapsed minutes: '+this.elapsedminutes
+
         const vectorSource = new VectorSource({
           features: new GeoJSON().readFeatures(grid),
         });
@@ -138,7 +147,6 @@ export class GetSnapshotControl extends Control {
   setSimulationId(simulationId) {
     this.simulationId = simulationId
     document.getElementById('simid').innerHTML = '<p id="simid">Simulation id: '+ this.simulationId +'</p>'
-
   }
 
   enableControl() {

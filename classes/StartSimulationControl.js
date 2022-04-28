@@ -105,6 +105,7 @@ export class StartSimulationControl extends Control {
           .filter(layer => layer.get('id') == 123)
           .forEach(layer => this.map.removeLayer(layer));
         this.map.addLayer(vectorLayer)
+        this.getSnapshotControl.elapsedminutes_ui.innerHTML = 'Elapsed minutes: '+elapsedminutes
         elapsedminutes += 10
       }
 
