@@ -27,7 +27,7 @@ import { GetSnapshotControl } from './classes/GetSnapshotControl'
 let code = "3035"
 let name = "ETRS89-extended / LAEA Europe"
 let proj4def = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-let bbox = [84.17, -35.58, 24.6, 44.83]
+let bbox = [36.452924, 6.944338, 47.320802, 18.348146]
 const newProjCode = 'EPSG:' + code;
 
 const addMarker = function (evt) {
