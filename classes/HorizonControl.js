@@ -11,7 +11,7 @@ export class HorizonControl extends Control {
 
     const element = document.createElement('div');
     element.className = 'ol-control ctrl-horizon'
-    element.innerHTML = 'Horizon: <input type="range" min="'+100+'" max="'+20000+'" step="100" value="50" class="slider" id="horizon">'
+    element.innerHTML = 'Horizon: <input type="range" min="'+100+'" max="'+5000+'" step="100" value="50" class="slider" id="horizon">'
 
     const val = document.createElement('span')
     val.id = 'val'

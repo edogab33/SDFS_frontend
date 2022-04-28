@@ -118,7 +118,6 @@ export class GetSnapshotControl extends Control {
   }
 
   incrementMinutes() {
-    console.log("inc")
     if (this.elapsedminutes < this.max) {
       this.elapsedminutes += 10
       this.val.innerHTML = this.elapsedminutes
