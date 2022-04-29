@@ -18,8 +18,9 @@ export class StartSimulationControl extends Control {
   getSnapshotControl
   simulationHorizon
   snapshottimeControl
+  clickCell
 
-  constructor(opt_options, horizonControl, getSnapshotControl, snapshottimeControl) {
+  constructor(opt_options, clickCell, horizonControl, getSnapshotControl, snapshottimeControl) {
     const options = opt_options || {};
 
     const button = document.createElement('button');
@@ -35,6 +36,7 @@ export class StartSimulationControl extends Control {
     });
 
     this.element = element
+    this.clickCell = clickCell
     this.horizonControl = horizonControl
     this.getSnapshotControl = getSnapshotControl
     this.snapshottimeControl = snapshottimeControl
@@ -65,6 +67,8 @@ export class StartSimulationControl extends Control {
       this.element.appendChild(button)
 
       button.addEventListener('click', this.stop.bind(this), false);
+
+      this.map.un('click', this.clickCell)
 
       this.timer = setTimeout(()=>{this.refresh(0)}, 2000)
     })

@@ -7,7 +7,8 @@ export class DeleteGridControl extends Control {
   map
   addMarker
   getGridController
-  constructor(opt_options, addMarker) {
+  clickCell
+  constructor(opt_options, addMarker, clickCell) {
     const options = opt_options || {};
 
     const button = document.createElement('button');
@@ -23,6 +24,7 @@ export class DeleteGridControl extends Control {
     });
 
     this.addMarker = addMarker
+    this.clickCell = clickCell
 
     button.addEventListener('click', this.handleDeleteGrid.bind(this), false);
   }
@@ -33,6 +35,7 @@ export class DeleteGridControl extends Control {
       .forEach(layer => this.map.removeLayer(layer));
 
     this.map.on('singleclick', this.addMarker)
+    this.map.on('click', this.clickCell)
     this.disableControl()
     this.getGridController.disableControl()
   }

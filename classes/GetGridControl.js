@@ -17,6 +17,7 @@ export class GetGridControl extends Control {
   disabled = true
   addMarker
   deleteGridController
+  
   constructor(opt_options, addMarker, deleteGridController) {
     const options = opt_options || {};
 
