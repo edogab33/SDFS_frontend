@@ -102,17 +102,15 @@ body {
 
 .ctrl-horizon {
   right: 60px !important;
-  top: 120px !important;
-  width: 280px;
+  top: 170px !important;
   border: solid rgb(0, 0, 0) !important;
   border-width: thin !important;
-  padding-top: 5px !important;
-  padding-bottom: 3px !important;
+  padding: 5px !important;
 }
 
 .ctrl-snapshottime {
   right: 60px !important;
-  top: 170px !important;
+  top: 120px !important;
   border: solid rgb(0, 0, 0) !important;
   border-width: thin !important;
   padding: 5px !important;
@@ -145,6 +143,10 @@ body {
 }
 
 #val_st {
+  padding: 5px;
+}
+
+#val_h {
   padding: 5px;
 }
 

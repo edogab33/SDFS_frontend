@@ -16,6 +16,8 @@ export class GetSnapshotControl extends Control {
   max = 20
   val
   elapsedminutes_ui
+  step = 10
+
   constructor(opt_options) {
     const options = opt_options || {};
 
@@ -66,6 +68,7 @@ export class GetSnapshotControl extends Control {
     this.val = val    // selectable minutes
     this.element = element
     this.simulationId = simulationId
+
     button.addEventListener('click', this.handleGetSnapshot.bind(this), false)
     button_plus.addEventListener('click', this.incrementMinutes.bind(this), false)
     button_minus.addEventListener('click', this.decrementMinutes.bind(this), false)
@@ -125,20 +128,20 @@ export class GetSnapshotControl extends Control {
 
   incrementMinutes() {
     if (this.elapsedminutes < this.max) {
-      this.elapsedminutes += 10
+      this.elapsedminutes += this.step
       this.val.innerHTML = this.elapsedminutes
     }
   }
 
   decrementMinutes() {
     if (this.elapsedminutes > 0) {
-      this.elapsedminutes -= 10
+      this.elapsedminutes -= this.step
       this.val.innerHTML = this.elapsedminutes
     }
   }
 
   setMax(max) {
-    this.elapsedMinutesSlider.max = max
+    this.max = max
   }
 
   setSimulationId(simulationId) {

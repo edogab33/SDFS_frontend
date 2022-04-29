@@ -6,16 +6,38 @@ export class HorizonControl extends Control {
    */
   horizonSlider
   val
+  horizon = 100
+  max = 20000
+  step = 100
+
   constructor(opt_options) {
     const options = opt_options || {};
 
     const element = document.createElement('div');
     element.className = 'ol-control ctrl-horizon'
-    element.innerHTML = 'Horizon: <input type="range" min="'+100+'" max="'+5000+'" step="100" value="50" class="slider" id="horizon">'
+
+    const button_plus = document.createElement('button')
+    button_plus.innerHTML = '+'
+    button_plus.id = 'plus'
+
+    const button_minus = document.createElement('button')
+    button_minus.innerHTML = '-'
+    button_minus.id = 'minus'
 
     const val = document.createElement('span')
-    val.id = 'val'
-    element.appendChild(val)
+    val.id = 'val_h'
+
+    const label_val = document.createElement('span')
+    label_val.innerHTML = 'Horizon: '
+
+    const nested_div = document.createElement('div')
+    nested_div.className = ''
+
+    nested_div.appendChild(label_val)
+    nested_div.appendChild(button_minus)
+    nested_div.appendChild(val)
+    nested_div.appendChild(button_plus)
+    element.appendChild(nested_div)
 
     super({
       element: element,
@@ -23,15 +45,24 @@ export class HorizonControl extends Control {
     });
     this.val = val
     this.element = element
+
+    this.val.innerHTML = this.horizon
+
+    button_plus.addEventListener('click', this.incrementMinutes.bind(this), false)
+    button_minus.addEventListener('click', this.decrementMinutes.bind(this), false)
   }
 
-  activateSlider() {
-    this.horizonSlider = document.getElementById('horizon')
+  incrementMinutes() {
+    if (this.horizon < this.max) {
+      this.horizon += this.step
+      this.val.innerHTML = this.horizon
+    }
+  }
 
-    this.val.innerHTML = this.horizonSlider.value
-
-    this.horizonSlider.oninput = function() {
-      document.getElementById('val').innerHTML = document.getElementById('horizon').value
+  decrementMinutes() {
+    if (this.horizon > 100) {
+      this.horizon -= this.step
+      this.val.innerHTML = this.horizon
     }
   }
 }

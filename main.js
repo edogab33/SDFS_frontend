@@ -85,7 +85,7 @@ var scalebar = new ScaleLine({
 
 let horizonController = new HorizonControl()
 let getSnapshotController = new GetSnapshotControl()
-let snapshottimeController = new SnapshottimeControl()
+let snapshottimeController = new SnapshottimeControl("", getSnapshotController)
 let startSimulationController = new StartSimulationControl("", horizonController, getSnapshotController, snapshottimeController)
 let deleteGridController = new DeleteGridControl("", addMarker)
 let getGridController = new GetGridControl("", addMarker, deleteGridController)
@@ -113,7 +113,6 @@ deleteGridController.map = map
 getGridController.map = map
 startSimulationController.map = map
 getSnapshotController.map = map
-horizonController.activateSlider()
 
 /* GEOLOCATION */
 const geolocation = new Geolocation({

@@ -18,6 +18,7 @@ export class StartSimulationControl extends Control {
   getSnapshotControl
   simulationHorizon
   snapshottimeControl
+
   constructor(opt_options, horizonControl, getSnapshotControl, snapshottimeControl) {
     const options = opt_options || {};
 
@@ -110,7 +111,7 @@ export class StartSimulationControl extends Control {
           .forEach(layer => this.map.removeLayer(layer));
         this.map.addLayer(vectorLayer)
         this.getSnapshotControl.elapsedminutes_ui.innerHTML = 'Elapsed minutes: '+elapsedminutes
-        elapsedminutes += 10
+        elapsedminutes += this.getSnapshotControl.step
       }
 
       if (elapsedminutes > this.simulationHorizon) {
@@ -126,7 +127,7 @@ export class StartSimulationControl extends Control {
   }
 
   stop() {
-    this.getSnapshotControl.max = this.simulationHorizon
+    this.getSnapshotControl.setMax(this.simulationHorizon)
     this.getSnapshotControl.enableControl()
 
     stopSimulation(this.simulationId).then(response => {

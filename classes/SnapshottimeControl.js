@@ -3,6 +3,7 @@ import {Vector as VectorLayer} from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
 import {Control} from 'ol/control';
 import {Fill, Stroke, Style} from 'ol/style';
+import { transformWithProjections } from 'ol/proj';
 
 export class SnapshottimeControl extends Control {
     /**
@@ -10,8 +11,11 @@ export class SnapshottimeControl extends Control {
    */
   max = 20
   val
-  snapshottime = 0
-  constructor(opt_options) {
+  snapshottime = 10
+  getSnapshotControl
+  step = 1
+
+  constructor(opt_options, getSnapshotControl) {
     const options = opt_options || {};
 
     const element = document.createElement('div');
@@ -48,21 +52,26 @@ export class SnapshottimeControl extends Control {
 
     this.val = val    // selectable snapshottime
     this.element = element
+    this.getSnapshotControl = getSnapshotControl
+    this.val.innerHTML = this.snapshottime
+
     button_plus.addEventListener('click', this.incrementMinutes.bind(this), false)
     button_minus.addEventListener('click', this.decrementMinutes.bind(this), false)
   }
 
   incrementMinutes() {
     if (this.snapshottime < this.max) {
-      this.snapshottime += 1
+      this.snapshottime += this.step
       this.val.innerHTML = this.snapshottime
+      this.getSnapshotControl.step = this.snapshottime
     }
   }
 
   decrementMinutes() {
-    if (this.snapshottime > 0) {
-      this.snapshottime -= 1
+    if (this.snapshottime > 1) {
+      this.snapshottime -= this.step
       this.val.innerHTML = this.snapshottime
+      this.getSnapshotControl.step = this.snapshottime
     }
   }
 
