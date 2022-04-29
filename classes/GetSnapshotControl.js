@@ -94,7 +94,7 @@ export class GetSnapshotControl extends Control {
       return styles;
     };
 
-    getSnapshot(this.simulationId, this.elapsedminutes).then(response => {
+    getSnapshot(this.simulationId, this.elapsedminutes, this.step).then(response => {
       var grid = response.data
       console.log("New grid from snapshot:")
       console.log(grid)

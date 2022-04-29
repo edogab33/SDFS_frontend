@@ -1,15 +1,11 @@
 import 'ol/ol.css';
-import MVT from 'ol/format/MVT';
 import Map from 'ol/Map';
-import TileGrid from 'ol/tilegrid/TileGrid';
-import VectorTileLayer from 'ol/layer/VectorTile';
-import VectorTileSource from 'ol/source/VectorTile';
 import View from 'ol/View';
 import proj4 from 'proj4';
-import {Fill, Icon, Stroke, Style, Text, Circle} from 'ol/style';
+import {Fill, Stroke, Style, Text, Circle} from 'ol/style';
 import {get as getProjection, getTransform} from 'ol/proj';
 import {register} from 'ol/proj/proj4';
-import {applyTransform, approximatelyEquals} from 'ol/extent';
+import {applyTransform} from 'ol/extent';
 import {OSM, Vector as VectorSource} from 'ol/source'
 import TileLayer from 'ol/layer/Tile';
 import {Vector as VectorLayer} from 'ol/layer';
@@ -139,8 +135,7 @@ let getSnapshotController = new GetSnapshotControl()
 let snapshottimeController = new SnapshottimeControl("", getSnapshotController)
 
 const map = new Map({
-  controls: defaultControls().extend([ 
-                                      horizonController, getSnapshotController, snapshottimeController, scalebar]),
+  controls: defaultControls().extend([horizonController, getSnapshotController, snapshottimeController, scalebar]),
   layers: [
     new TileLayer({
       source:new OSM()
