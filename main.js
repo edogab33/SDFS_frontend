@@ -23,6 +23,7 @@ import { StartSimulationControl } from './classes/StartSimulationControl'
 import { DeleteGridControl } from './classes/DeleteGridControl'
 import { HorizonControl } from './classes/HorizonControl'
 import { GetSnapshotControl } from './classes/GetSnapshotControl'
+import { SnapshottimeControl } from './classes/SnapshottimeControl';
 
 let code = "3035"
 let name = "ETRS89-extended / LAEA Europe"
@@ -82,16 +83,17 @@ var scalebar = new ScaleLine({
   minWidth: 140,
 });
 
-let startSimulationController = new StartSimulationControl()
+let horizonController = new HorizonControl()
+let getSnapshotController = new GetSnapshotControl()
+let snapshottimeController = new SnapshottimeControl()
+let startSimulationController = new StartSimulationControl("", horizonController, getSnapshotController, snapshottimeController)
 let deleteGridController = new DeleteGridControl("", addMarker)
 let getGridController = new GetGridControl("", addMarker, deleteGridController)
 let undoController = new UndoControl("", startSimulationController)
-let horizonController = new HorizonControl()
-let getSnapshotController = new GetSnapshotControl()
 
 const map = new Map({
   controls: defaultControls().extend([getGridController, deleteGridController, undoController, startSimulationController, 
-                                      horizonController, getSnapshotController, scalebar]),
+                                      horizonController, getSnapshotController, snapshottimeController, scalebar]),
   layers: [
     new TileLayer({
       source:new OSM()
@@ -112,8 +114,6 @@ getGridController.map = map
 startSimulationController.map = map
 getSnapshotController.map = map
 horizonController.activateSlider()
-startSimulationController.horizonControl = horizonController
-startSimulationController.getSnapshotControl = getSnapshotController
 
 /* GEOLOCATION */
 const geolocation = new Geolocation({

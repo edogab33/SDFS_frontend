@@ -31,12 +31,10 @@ export class GetSnapshotControl extends Control {
     const button_plus = document.createElement('button')
     button_plus.innerHTML = '+'
     button_plus.id = 'plus'
-    //button_plus.className = 'ol-control'
 
     const button_minus = document.createElement('button')
     button_minus.innerHTML = '-'
     button_minus.id = 'minus'
-    //button_minus.className = 'ol-control'
 
     const val = document.createElement('span')
     val.id = 'val_em'
@@ -46,7 +44,6 @@ export class GetSnapshotControl extends Control {
     label_val.innerHTML = 'Minuti: '
 
     const nested_div = document.createElement('div')
-    nested_div.className = ''
 
     nested_div.appendChild(label_val)
     nested_div.appendChild(button_minus)

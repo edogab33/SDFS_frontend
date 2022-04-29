@@ -23,7 +23,6 @@ export class HorizonControl extends Control {
     });
     this.val = val
     this.element = element
-    //button.addEventListener('click', this.handleStartSimulation.bind(this), false);
   }
 
   activateSlider() {

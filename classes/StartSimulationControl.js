@@ -17,7 +17,8 @@ export class StartSimulationControl extends Control {
   horizonControl
   getSnapshotControl
   simulationHorizon
-  constructor(opt_options, horizonControl) {
+  snapshottimeControl
+  constructor(opt_options, horizonControl, getSnapshotControl, snapshottimeControl) {
     const options = opt_options || {};
 
     const button = document.createElement('button');
@@ -34,6 +35,8 @@ export class StartSimulationControl extends Control {
 
     this.element = element
     this.horizonControl = horizonControl
+    this.getSnapshotControl = getSnapshotControl
+    this.snapshottimeControl = snapshottimeControl
     button.addEventListener('click', this.handleStartSimulation.bind(this), false);
   }
 
@@ -43,6 +46,7 @@ export class StartSimulationControl extends Control {
     
     var gjson = JSON.parse(new GeoJSON().writeFeatures(gridLayer.getSource().getFeatures()))
     gjson.horizon = this.horizonControl.val.innerHTML
+    gjson.snapshottime = this.snapshottimeControl.val.innerHTML
     this.simulationHorizon = gjson.horizon
 
     startSimulation(gjson).then(response => {
@@ -109,7 +113,7 @@ export class StartSimulationControl extends Control {
         elapsedminutes += 10
       }
 
-      if (elapsedminutes >= this.simulationHorizon) {
+      if (elapsedminutes > this.simulationHorizon) {
         // Simulation has terminated
         this.stop()
         return
