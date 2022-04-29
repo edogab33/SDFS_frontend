@@ -95,7 +95,8 @@ export class StartSimulationControl extends Control {
       styles.getFill().setColor(color);
       return styles;
     };
-    getSnapshot(this.simulationId, elapsedminutes, this.snapshottimeControl.step).then(response => {
+
+    getSnapshot(this.simulationId, elapsedminutes, this.snapshottimeControl.snapshottime).then(response => {
       var grid = response.data
       console.log("New grid from snapshot:")
       console.log(grid)

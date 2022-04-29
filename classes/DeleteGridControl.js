@@ -8,7 +8,8 @@ export class DeleteGridControl extends Control {
   addMarker
   getGridController
   clickCell
-  constructor(opt_options, addMarker, clickCell) {
+  startSimulationController
+  constructor(opt_options, addMarker, clickCell, startSimulationController) {
     const options = opt_options || {};
 
     const button = document.createElement('button');
@@ -25,6 +26,7 @@ export class DeleteGridControl extends Control {
 
     this.addMarker = addMarker
     this.clickCell = clickCell
+    this.startSimulationController = startSimulationController
 
     button.addEventListener('click', this.handleDeleteGrid.bind(this), false);
   }
@@ -38,6 +40,7 @@ export class DeleteGridControl extends Control {
     this.map.on('click', this.clickCell)
     this.disableControl()
     this.getGridController.disableControl()
+    this.startSimulationController.disableControl()
   }
   
   enableControl() {
