@@ -61,26 +61,31 @@ const clickCell = function (pixel) {
   }
 };
 
- const fill = new Fill({
-   color: 'rgba(255,255,255,0.4)',
- });
- const stroke = new Stroke({
-   color: '#3399CC',
-   width: 1.25,
- });
-const iconStyle = new Style({
-  image: new Circle({
-    fill: fill,
-    stroke: stroke,
-    radius: 5,
-  }),
-  fill: fill,
-  stroke: stroke,
-});
-
 const addMarker = function (evt) {
   console.log("coordinates: "+evt.coordinate);
+  const pointSource = new VectorSource({
+    features: [],
+  });
+
   if (tapCount < 2) {
+    const pointLayer = new VectorLayer();
+    map.addLayer(pointLayer)
+    const fill = new Fill({
+      color: 'rgba(255,255,255,0.4)',
+    });
+    const stroke = new Stroke({
+      color: '#3399CC',
+      width: 1.25,
+    });
+    const iconStyle = new Style({
+      image: new Circle({
+        fill: fill,
+        stroke: stroke,
+        radius: 5,
+      }),
+      fill: fill,
+      stroke: stroke,
+    });
     const iconFeature = new Feature({
       geometry: new Point(evt.coordinate),
       name: 'Point'
@@ -102,6 +107,9 @@ const addMarker = function (evt) {
     }
   } else if (tapCount >= 2) {
     tapCount = 0
+    map.getLayers().getArray()
+        .filter(layer => layer.get('id') == 456)
+        .forEach(layer => map.removeLayer(layer));
     pointSource.clear()   // delete markers
     getGridController.disableControl()
   }
@@ -197,12 +205,6 @@ map.on('moveend', function(e) {
     currZoom = newZoom;
   }
 });
-
-const pointSource = new VectorSource({
-  features: [],
-});
-const pointLayer = new VectorLayer();
-map.addLayer(pointLayer)
 
 map.on('click', _clickCell = function (evt) {
   clickCell(evt.pixel)
