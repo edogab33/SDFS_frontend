@@ -212,8 +212,8 @@ map.on('click', _clickCell = function (evt) {
 map.on('singleclick', addMarker);
 
 let startSimulationController = new StartSimulationControl("", _clickCell, horizonController, getSnapshotController, snapshottimeController)
-let deleteGridController = new DeleteGridControl("", addMarker, _clickCell, startSimulationController)
-let getGridController = new GetGridControl("", addMarker, deleteGridController)
+let deleteGridController = new DeleteGridControl("", addMarker, _clickCell)
+let getGridController = new GetGridControl("", addMarker, deleteGridController, startSimulationController)
 let undoController = new UndoControl("", startSimulationController)
 
 deleteGridController.getGridController = getGridController
