@@ -17,13 +17,8 @@ export class GetGridControl extends Control {
   disabled = true
   addMarker
   deleteGridController
-  startSimulationControl
-  swx
-  swy
-  xsize
-  ysize
   
-  constructor(opt_options, addMarker, deleteGridController, startSimulationControl) {
+  constructor(opt_options, addMarker, deleteGridController) {
     const options = opt_options || {};
 
     const button = document.createElement('button');
@@ -40,7 +35,6 @@ export class GetGridControl extends Control {
 
     this.addMarker = addMarker
     this.deleteGridController = deleteGridController
-    this.startSimulationControl = startSimulationControl
 
     button.addEventListener('click', this.handleGetGrid.bind(this), false);
   }
@@ -67,17 +61,8 @@ export class GetGridControl extends Control {
       if (grid.features.length == 0) {
         return
       }
+      console.log(grid)
       let gridjson = new GeoJSON().readFeatures(grid)
-
-      this.swx = gridjson[0].getGeometry().getCoordinates()[0][0][0]
-      this.swy = gridjson[0].getGeometry().getCoordinates()[0][0][1]
-      this.xsize = 1 + ((gridjson[gridjson.length - 1].getGeometry().getCoordinates()[0][0][0] - this.swx) / 10)
-      this.ysize = 1 + ((gridjson[gridjson.length - 1].getGeometry().getCoordinates()[0][0][1] - this.swy) / 10)
-
-      this.startSimulationControl.swx = this.swx
-      this.startSimulationControl.swy = this.swy
-      this.startSimulationControl.xsize = this.xsize
-      this.startSimulationControl.ysize = this.ysize
 
       const vectorSource = new VectorSource({
         features: gridjson,

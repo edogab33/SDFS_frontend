@@ -213,7 +213,7 @@ map.on('singleclick', addMarker);
 
 let startSimulationController = new StartSimulationControl("", _clickCell, horizonController, getSnapshotController, snapshottimeController)
 let deleteGridController = new DeleteGridControl("", addMarker, _clickCell)
-let getGridController = new GetGridControl("", addMarker, deleteGridController, startSimulationController)
+let getGridController = new GetGridControl("", addMarker, deleteGridController)
 let undoController = new UndoControl("", startSimulationController)
 
 deleteGridController.getGridController = getGridController
