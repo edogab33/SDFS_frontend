@@ -6,9 +6,9 @@ export class HorizonControl extends Control {
    */
   horizonSlider
   val
-  horizon = 200
+  horizon = 100
   max = 20000
-  step = 50
+  step = 100
 
   constructor(opt_options) {
     const options = opt_options || {};
@@ -60,7 +60,7 @@ export class HorizonControl extends Control {
   }
 
   decrementMinutes() {
-    if (this.horizon > 50) {
+    if (this.horizon > 100) {
       this.horizon -= this.step
       this.val.innerHTML = this.horizon
     }
