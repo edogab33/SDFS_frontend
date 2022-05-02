@@ -18,10 +18,6 @@ export class StartSimulationControl extends Control {
   getSnapshotControl
   simulationHorizon
   clickCell
-  swx
-  swy
-  xsize
-  ysize
 
   constructor(opt_options, clickCell, horizonControl, getSnapshotControl, snapshottimeControl) {
     const options = opt_options || {};
@@ -53,16 +49,7 @@ export class StartSimulationControl extends Control {
     var gjson = JSON.parse(new GeoJSON().writeFeatures(gridLayer.getSource().getFeatures()))
     gjson.horizon = this.horizonControl.val.innerHTML
     gjson.snapshottime = this.snapshottimeControl.val.innerHTML
-    gjson.swx = this.swx
-    gjson.swy = this.swy
-    gjson.xsize = this.xsize
-    gjson.ysize = this.ysize
-
-    console.log(this.swx)
-    console.log(this.swy)
-    console.log(this.xsize)
-    console.log(this.ysize)
-
+    
     this.simulationHorizon = gjson.horizon
 
     startSimulation(gjson).then(response => {
