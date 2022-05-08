@@ -49,6 +49,8 @@ export class StartSimulationControl extends Control {
     var gjson = JSON.parse(new GeoJSON().writeFeatures(gridLayer.getSource().getFeatures()))
     gjson.horizon = this.horizonControl.val.innerHTML
     gjson.snapshottime = this.snapshottimeControl.val.innerHTML
+
+    console.log(gjson)
     
     this.simulationHorizon = gjson.horizon
 
@@ -60,7 +62,7 @@ export class StartSimulationControl extends Control {
       this.getSnapshotControl.setSimulationId(this.simulationId)
 
       const button = document.createElement('button');
-      button.innerHTML = 'Ferma simulazione';
+      button.innerHTML = 'In corso...';
 
       this.element.className = 'ol-control ctrl-stop-simulation';
       this.element.removeChild(this.element.firstChild);
@@ -135,36 +137,49 @@ export class StartSimulationControl extends Control {
     this.getSnapshotControl.setMax(this.simulationHorizon)
     this.getSnapshotControl.enableControl()
 
-    stopSimulation(this.simulationId).then(response => {
-      if (this.timer != undefined) {
-        clearTimeout(this.timer)
-        this.timer = 0
-      }
+    if (this.timer != undefined) {
+      clearTimeout(this.timer)
+      this.timer = 0
+     }
 
-      const button = document.createElement('button');
-      button.innerHTML = 'Inizia simulazione';
+    const button = document.createElement('button');
+    button.innerHTML = 'Inizia simulazione';
 
-      this.element.className = 'ol-control ctrl-start-simulation';
-      this.element.removeChild(this.element.firstChild);
-      this.element.appendChild(button)
+    this.element.className = 'ol-control ctrl-start-simulation';
+    this.element.removeChild(this.element.firstChild);
+    this.element.appendChild(button)
 
-      button.addEventListener('click', this.handleStartSimulation.bind(this), false);
-    })
-    .catch(error => {
-      if (this.timer != 0) {
-        clearTimeout(this.timer)
-        this.timer = 0
-      }
+    button.addEventListener('click', this.handleStartSimulation.bind(this), false);
+    //stopSimulation(this.simulationId).then(response => {
+    //  if (this.timer != undefined) {
+    //    clearTimeout(this.timer)
+    //    this.timer = 0
+    //  }
 
-      const button = document.createElement('button');
-      button.innerHTML = 'Inizia simulazione';
+    //  const button = document.createElement('button');
+    //  button.innerHTML = 'Inizia simulazione';
 
-      this.element.className = 'ol-control ctrl-start-simulation';
-      this.element.removeChild(this.element.firstChild);
-      this.element.appendChild(button)
-      
-      console.error(error)
-    })
+    //  this.element.className = 'ol-control ctrl-start-simulation';
+    //  this.element.removeChild(this.element.firstChild);
+    //  this.element.appendChild(button)
+
+    //  button.addEventListener('click', this.handleStartSimulation.bind(this), false);
+    //})
+    //.catch(error => {
+    //  if (this.timer != 0) {
+    //    clearTimeout(this.timer)
+    //    this.timer = 0
+    //  }
+
+    //  const button = document.createElement('button');
+    //  button.innerHTML = 'Inizia simulazione';
+
+    //  this.element.className = 'ol-control ctrl-start-simulation';
+    //  this.element.removeChild(this.element.firstChild);
+    //  this.element.appendChild(button)
+    //  
+    //  console.error(error)
+    //})
   }
 
   enableControl() {

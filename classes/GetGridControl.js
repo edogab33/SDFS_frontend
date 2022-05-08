@@ -61,7 +61,7 @@ export class GetGridControl extends Control {
       if (grid.features.length == 0) {
         return
       }
-      console.log(grid)
+      console.log(JSON.stringify(grid))
       let gridjson = new GeoJSON().readFeatures(grid)
 
       const vectorSource = new VectorSource({
