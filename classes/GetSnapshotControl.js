@@ -122,6 +122,7 @@ export class GetSnapshotControl extends Control {
       }
     })
     .catch(error => {
+      alert(error)
       console.log(error)
     })
   }

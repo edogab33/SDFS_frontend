@@ -85,6 +85,7 @@ export class GetGridControl extends Control {
       this.deleteGridController.enableControl()
       this.disableControl()
     }).catch(e => {
+      alert(error)
       console.error(e)
     })
   }

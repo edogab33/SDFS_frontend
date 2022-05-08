@@ -81,6 +81,7 @@ export class StartSimulationControl extends Control {
       this.timer = setTimeout(()=>{this.refresh(0)}, 2000)
     })
     .catch(error => {
+      alert(error)
       console.log(error)
     })
   }
@@ -135,6 +136,7 @@ export class StartSimulationControl extends Control {
       this.timer = setTimeout(()=>{this.refresh(elapsedminutes)}, 2000);
     })
     .catch(error => {
+      alert(error)
       console.log(error)
     })
   }
