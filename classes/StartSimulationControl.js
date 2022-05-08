@@ -62,7 +62,13 @@ export class StartSimulationControl extends Control {
       this.getSnapshotControl.setSimulationId(this.simulationId)
 
       const button = document.createElement('button');
-      button.innerHTML = 'In corso...';
+      button.innerHTML = 'In corso';
+      var dots = window.setInterval( function() {
+        if (button.innerHTML.length > 10) 
+            button.innerHTML = "In corso";
+        else 
+            button.innerHTML += ".";
+      }, 1000);
 
       this.element.className = 'ol-control ctrl-stop-simulation';
       this.element.removeChild(this.element.firstChild);
