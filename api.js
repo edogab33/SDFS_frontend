@@ -17,6 +17,5 @@ export function stopSimulation(simulationId) {
 
 export function getSnapshot(simulationId, elapsedminutes, snapshottime) {
     var path = '/snapshot/'+parseInt(simulationId)+'/'+parseInt(elapsedminutes)+'/'+parseInt(snapshottime)
-    console.log(path)
     return axios.get(BASE_URL+path)
 }
