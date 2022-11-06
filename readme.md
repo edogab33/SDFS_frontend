@@ -1,18 +1,7 @@
-# OpenLayers + Vite
+# SDFS_frontend
 
-This example demonstrates how the `ol` package can be used with [Vite](https://vitejs.dev/).
+This is the frontend part of the project Satellite Driven Fire Simulator: http://mclab.di.uniroma1.it/site/index.php/projects/60-sdfs-por-fesr-2014-2020-aerospazio-e-sicurezza
 
-To get started, run the following (requires Node 12+):
+The backend can be found here: https://github.com/edogab33/SDFS_backend
 
-    npx create-ol-app my-app --template vite
-
-Then change into your new `my-app` directory and start a development server (available at http://localhost:3000):
-
-    cd my-app
-    npm start
-
-To generate a build ready for production:
-
-    npm run build
-
-Then deploy the contents of the `dist` directory to your server.  You can also run `npm run serve` to serve the results of the `dist` directory for preview.
+This repository serves only as a demostration since the database is not publicy available. Can be used to see how you can work with OpenLayers + OpenStreetMap and how to easly make it possible to work with coordinates in different standards (in this case the database uses EPSG:3035 while the frontend uses EPSG:4326).
